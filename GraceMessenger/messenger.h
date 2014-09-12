@@ -1,9 +1,12 @@
 #pragma once
 
+#include <memory>
+
 #include "status.h"
 #include "message.h"
 #include "callbacks.h"
 #include "contact_list.h"
+#include "dht/dht.h"
 
 namespace GraceMessenger
 {
@@ -23,6 +26,7 @@ namespace GraceMessenger
 
 
 	private:
+		std::unique_ptr<GraceDHT::dht> _dht;
 		callbacks _callbacks;
 		contact_list _contact_list;
 	};
