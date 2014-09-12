@@ -1,6 +1,5 @@
 /*  
 *   Byte-oriented AES-256 implementation.
-*   All lookup tables replaced with 'on the fly' calculations. 
 *
 *   Copyright (c) 2007-2009 Ilya O. Levin, http://www.literatecode.com
 *   Other contributors: Hal Finney
@@ -17,15 +16,13 @@
 *   ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 *   OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
-#ifndef uint8_t
-#define uint8_t  unsigned char
-#endif
 
 #ifdef __cplusplus
 extern "C" { 
 #endif
+#include <stdint.h>
 
-    typedef struct {
+typedef struct {
         uint8_t key[32]; 
         uint8_t enckey[32]; 
         uint8_t deckey[32];
