@@ -6,6 +6,6 @@
 namespace GraceMessenger
 {
 
-	typedef std::array<uint32_t, 8> user_id;
+	typedef std::array<uint8_t, 32> user_id;
 
 }
