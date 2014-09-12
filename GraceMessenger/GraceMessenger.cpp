@@ -2,7 +2,12 @@
 #include "messenger.h"
 #include "crypto/curve25519.h"
 #include "crypto/crypto.h"
+#include "crypto/aes256.h"
 
+#define DUMP(s, i, buf, sz)  {printf(s);                   \
+                              for (i = 0; i < (sz);i++)    \
+                                  printf("%02x ", buf[i]); \
+                              printf("\n");}
 
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -22,6 +27,29 @@ int _tmain(int argc, _TCHAR* argv[])
 	GraceMessenger::Crypto::generage_sharedkey(ashared, asecret, bpublic);
 	GraceMessenger::Crypto::generage_sharedkey(bshared, bsecret, apublic);
 
+	aes256_context ctx;
+	uint8_t key[32];
+	uint8_t buf[16], i;
+
+	/* put a test vector */
+	for (i = 0; i < sizeof(buf); i++) buf[i] = i * 16 + i;
+	for (i = 0; i < sizeof(key); i++) key[i] = i;
+
+	DUMP("txt: ", i, buf, sizeof(buf));
+	DUMP("key: ", i, key, sizeof(key));
+	printf("---\n");
+
+	aes256_init(&ctx, key);
+	aes256_encrypt_ecb(&ctx, buf);
+
+	DUMP("enc: ", i, buf, sizeof(buf));
+	printf("tst: 8e a2 b7 ca 51 67 45 bf ea fc 49 90 4b 49 60 89\n");
+
+	aes256_init(&ctx, key);
+	aes256_decrypt_ecb(&ctx, buf);
+	DUMP("dec: ", i, buf, sizeof(buf));
+
+	aes256_done(&ctx);
 
 	return 0;
 }

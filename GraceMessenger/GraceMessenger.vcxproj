@@ -81,6 +81,7 @@
     <ClInclude Include="boolinq.h" />
     <ClInclude Include="callbacks.h" />
     <ClInclude Include="contact_list.h" />
+    <ClInclude Include="crypto\aes256.h" />
     <ClInclude Include="crypto\crypto.h" />
     <ClInclude Include="dht\constants.h" />
     <ClInclude Include="dht\dht.h" />
@@ -102,6 +103,7 @@
     <ClInclude Include="user_id.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="crypto\aes256.c" />
     <ClCompile Include="crypto\curve25519.h" />
     <ClCompile Include="GraceMessenger.cpp" />
     <ClCompile Include="messenger.cpp" />
