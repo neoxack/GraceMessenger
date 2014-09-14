@@ -97,6 +97,8 @@
     <ClInclude Include="dht\node_id.h" />
     <ClInclude Include="dht\routing_table.h" />
     <ClInclude Include="dht\utils.h" />
+    <ClInclude Include="logger\log.h" />
+    <ClInclude Include="logger\Logger.h" />
     <ClInclude Include="message.h" />
     <ClInclude Include="messenger.h" />
     <ClInclude Include="status.h" />
@@ -107,6 +109,7 @@
     <ClCompile Include="crypto\aes256.c" />
     <ClCompile Include="crypto\curve25519.h" />
     <ClCompile Include="GraceMessenger.cpp" />
+    <ClCompile Include="logger\Logger.cpp" />
     <ClCompile Include="messenger.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

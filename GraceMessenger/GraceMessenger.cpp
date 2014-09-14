@@ -3,6 +3,7 @@
 #include "crypto/curve25519.h"
 #include "crypto/crypto.h"
 #include "crypto/aes256.h"
+#include "logger/log.h"
 
 #define DUMP(s, i, buf, sz)  {printf(s);                   \
                               for (i = 0; i < (sz);i++)    \
@@ -26,6 +27,8 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	GraceMessenger::Crypto::generate_sharedkey(ashared, asecret, bpublic);
 	GraceMessenger::Crypto::generate_sharedkey(bshared, bsecret, apublic);
+	LOG(Info, "123454");
+	LOG(Warning, "123414");
 
 	aes256_context ctx;
 	uint8_t key[32];
@@ -41,7 +44,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	aes256_init(&ctx, key);
 	aes256_encrypt_ecb(&ctx, buf);
-
+	
 	DUMP("enc: ", i, buf, sizeof(buf));
 	printf("tst: 8e a2 b7 ca 51 67 45 bf ea fc 49 90 4b 49 60 89\n");
 
