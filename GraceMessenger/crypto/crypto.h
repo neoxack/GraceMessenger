@@ -17,7 +17,7 @@ namespace GraceMessenger
 			return dis(gen);
 		}
 
-		inline void generage_keypair(uint8_t *private_key, uint8_t *public_key)
+		inline void generate_keypair(uint8_t *private_key, uint8_t *public_key)
 		{
 			//generate private_key
 			for (size_t i = 0; i < 8; i++)
@@ -35,7 +35,7 @@ namespace GraceMessenger
 			curve25519(public_key, private_key, basepoint);
 		}
 
-		inline void generage_sharedkey(uint8_t *shared_key, uint8_t *mysecret, uint8_t *theirpublic)
+		inline void generate_sharedkey(uint8_t *shared_key, uint8_t *mysecret, uint8_t *theirpublic)
 		{
 			curve25519(shared_key, mysecret, theirpublic);
 		}

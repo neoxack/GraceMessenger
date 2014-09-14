@@ -67,7 +67,7 @@ typedef int64_t limb;
 
 /* Sum two numbers: output += in */
 inline static void fsum(limb *output, const limb *in) {
-  unsigned i;
+  size_t i;
   for (i = 0; i < 10; i += 2) {
     output[0+i] = output[0+i] + in[0+i];
     output[1+i] = output[1+i] + in[1+i];

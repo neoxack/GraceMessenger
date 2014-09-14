@@ -15,17 +15,17 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	uint8_t asecret[32];
 	uint8_t apublic[32];
-	GraceMessenger::Crypto::generage_keypair(asecret, apublic);
+	GraceMessenger::Crypto::generate_keypair(asecret, apublic);
 
 	uint8_t bsecret[32];
 	uint8_t bpublic[32];
-	GraceMessenger::Crypto::generage_keypair(bsecret, bpublic);
+	GraceMessenger::Crypto::generate_keypair(bsecret, bpublic);
 
 	uint8_t ashared[32];
 	uint8_t bshared[32];
 
-	GraceMessenger::Crypto::generage_sharedkey(ashared, asecret, bpublic);
-	GraceMessenger::Crypto::generage_sharedkey(bshared, bsecret, apublic);
+	GraceMessenger::Crypto::generate_sharedkey(ashared, asecret, bpublic);
+	GraceMessenger::Crypto::generate_sharedkey(bshared, bsecret, apublic);
 
 	aes256_context ctx;
 	uint8_t key[32];
