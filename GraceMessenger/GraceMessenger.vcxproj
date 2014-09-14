@@ -101,6 +101,8 @@
     <ClInclude Include="logger\Logger.h" />
     <ClInclude Include="message.h" />
     <ClInclude Include="messenger.h" />
+    <ClInclude Include="network\config.h" />
+    <ClInclude Include="network\network_service.h" />
     <ClInclude Include="status.h" />
     <ClInclude Include="user.h" />
     <ClInclude Include="user_id.h" />

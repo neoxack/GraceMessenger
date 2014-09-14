@@ -87,6 +87,12 @@
     <ClInclude Include="logger\Logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="network\network_service.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="network\config.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraceMessenger.cpp">

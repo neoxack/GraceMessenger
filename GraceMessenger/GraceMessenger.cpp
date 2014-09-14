@@ -12,7 +12,10 @@
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	GraceMessenger::messenger messenger;
+
+	GraceMessenger::callbacks callbacks;
+	GraceMessenger::config config;
+	GraceMessenger::messenger messenger(config, callbacks);
 
 	uint8_t asecret[32];
 	uint8_t apublic[32];

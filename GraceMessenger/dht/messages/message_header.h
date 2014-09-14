@@ -29,12 +29,13 @@ namespace GraceDHT
 			uint64_t timestamp;
 
 			message_header(uint32_t transaction_id, uint32_t size) :
+				type(0),
+				transaction_id(transaction_id),
 				sender_id({}),
-				transaction_id(transaction_id), 
 				size(size), 
 				random(get_random()), 
-				timestamp(get_timestamp()), 
-				type(0)
+				timestamp(get_timestamp())
+				
 			{
 			}
 

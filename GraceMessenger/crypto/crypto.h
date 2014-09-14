@@ -9,6 +9,8 @@ namespace GraceMessenger
 {
 	namespace Crypto
 	{
+		typedef std::array<uint8_t, 32> shared_key;
+
 		inline uint32_t get_random()
 		{
 			static std::random_device rd;
@@ -23,7 +25,7 @@ namespace GraceMessenger
 			for (size_t i = 0; i < 8; i++)
 			{
 				auto r = get_random();
-				memcpy(&private_key[i * 4], &r, sizeof(uint32_t));
+				*(uint32_t*)(private_key + i * sizeof(uint32_t)) = r;
 			}
 
 			private_key[0] &= 248;
