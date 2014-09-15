@@ -37,6 +37,7 @@ namespace GraceDHT
 		void stop()
 		{
 			_is_started = false;
+			_socket.close();
 		}
 
 		template<typename Message>

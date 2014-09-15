@@ -10,6 +10,8 @@ namespace GraceMessenger
 	namespace Crypto
 	{
 		typedef std::array<uint8_t, 32> shared_key;
+		typedef std::array<uint8_t, 32> private_key;
+		typedef std::array<uint8_t, 32> public_key;
 
 		inline uint32_t get_random()
 		{
