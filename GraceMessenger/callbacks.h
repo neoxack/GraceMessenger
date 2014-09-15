@@ -16,6 +16,8 @@ namespace GraceMessenger
 
 		std::function<void(const message *mes)> friend_request_received;
 		std::function<void(const message *mes)> friend_request_sended;
+
+		std::function<void(const user *user)> typing;
 	} callbacks;
 
 }

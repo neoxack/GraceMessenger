@@ -90,7 +90,7 @@
     <ClInclude Include="network\network_service.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="network\config.h">
+    <ClInclude Include="config.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="network\session.h">

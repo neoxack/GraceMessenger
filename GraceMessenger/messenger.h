@@ -9,7 +9,7 @@
 #include "dht/dht.h"
 #include "logger/log.h"
 #include "network/network_service.h"
-#include "network/config.h"
+#include "config.h"
 
 namespace GraceMessenger
 {
