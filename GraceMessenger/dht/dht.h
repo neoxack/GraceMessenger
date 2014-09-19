@@ -40,7 +40,7 @@ namespace GraceDHT
 			_network_service = std::make_unique<network_service>(_io_service, endpoint, bind(&dht::handle, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 			_main_node.endpoint = endpoint;
 			fill_random_id(_main_node.id);
-			_routing_table = std::make_unique<routing_table>(&_main_node);
+			_routing_table = std::make_unique<routing_table>(&_main_node, _network_service.get());
 		}
 
 		bool start()
@@ -48,7 +48,7 @@ namespace GraceDHT
 			if (_state == Off)
 			{
 				_network_service->start();
-				timer_start(std::bind(&dht::periodic_task, this), 60000);
+				timer_start(std::bind(&dht::periodic_task, this), FIND_PERIOD);
 				_state = Started;
 				return true;
 			}
@@ -158,7 +158,7 @@ namespace GraceDHT
 						send_message(find_message, node->endpoint);
 					}
 				}
-				ping(find_node_message.finder);
+				_routing_table->ping(find_node_message.finder);
 				
 			}
 			_routing_table->update(find_node_message.finder);						
@@ -235,12 +235,6 @@ namespace GraceDHT
 			//_sent_messages[message.header.transaction_id] = message.header;
 		}
 
-		void ping(const node &node)
-		{
-			Messages::ping<true> ping_message(get_random(), get_random());
-			send_message(ping_message, node.endpoint);
-		}
-
 		void timer_start(std::function<void(void)> func, size_t interval)
 		{
 			std::thread([func, interval]() {
@@ -254,7 +248,10 @@ namespace GraceDHT
 
 		void periodic_task()
 		{
-			
+			auto random_node = _routing_table->get_random_good_node();
+			Messages::find_node<true> find_message(_main_node, _main_node.id, get_random(), TTL);
+			send_message(find_message, random_node->endpoint);
+			_routing_table->ping_nodes();
 		}
 
 		dht_state _state;

@@ -3,6 +3,7 @@
 #include <asio.hpp>
 #include <functional>
 #include "constants.h"
+#include "../logger/log.h"
 
 namespace GraceDHT
 {
@@ -30,6 +31,8 @@ namespace GraceDHT
 					size_t bytes_recvd = _socket.receive_from(asio::buffer(_recv_buf, BUF_SIZE), _from_endpoint, 0, error);
 					if (!error)
 						_handler(_from_endpoint, _recv_buf, bytes_recvd);
+					else
+						LOG(Error, error.message());
 				}
 			}).detach();		
 		}
@@ -47,6 +50,8 @@ namespace GraceDHT
 			_to_endpoint = endpoint;
 			asio::error_code error;
 			size_t bytes_sent = _socket.send_to(asio::buffer(_send_buf, message.size()), _to_endpoint, 0, error);
+			if (error)
+				LOG(Error, error.message());
 		}
 			
 	private:

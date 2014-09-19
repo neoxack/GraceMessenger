@@ -6,7 +6,7 @@
 #include <fstream>
 
 // log message levels
-enum Level	{ Finest, Finer, Fine, Config, Info, Warning, Severe };
+enum Level	{ Error, Config, Info, Warning, Severe };
 
 class logger
 {
