@@ -40,7 +40,7 @@ namespace GraceDHT
 			_network_service = std::make_unique<network_service>(_io_service, endpoint, bind(&dht::handle, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 			_main_node.endpoint = endpoint;
 			fill_random_id(_main_node.id);
-			_routing_table = std::make_unique<routing_table>(&_main_node, _network_service.get());
+			_routing_table = std::make_unique<routing_table>(_main_node, *_network_service.get());
 		}
 
 		bool start()
@@ -48,7 +48,7 @@ namespace GraceDHT
 			if (_state == Off)
 			{
 				_network_service->start();
-				timer_start(std::bind(&dht::periodic_task, this), FIND_PERIOD);
+				
 				_state = Started;
 				return true;
 			}
@@ -64,6 +64,7 @@ namespace GraceDHT
 		{
 			if (_state == Started)
 			{
+				timer_start(std::bind(&dht::periodic_task, this), FIND_PERIOD);
 				_bootstrap_callback = callback;
 				_routing_table->update(node);
 				Messages::find_node<true> find_message(_main_node, _main_node.id, get_random(), TTL);
@@ -135,6 +136,7 @@ namespace GraceDHT
 				_state = Bootstrapped;
 				_bootstrap_callback(true, 0);
 			}
+
 			Messages::ping<false> ping_response(ping_message.header.transaction_id, ping_message.random);
 			send_message(ping_response, endpoint);
 		}
@@ -184,7 +186,7 @@ namespace GraceDHT
 
 		void handle(const udp::endpoint & endpoint, const std::array<char, BUF_SIZE> & buffer, size_t bytes_recvd)
 		{
-			std::cout << "handle() " << _main_node.endpoint.port() << " <- " << endpoint.port() << ", bytes received: " << bytes_recvd << std::endl;
+			std::cout << "handle() " << _main_node.endpoint.port() << " <- " << endpoint.port() << ", bytes received: " << bytes_recvd;
 			Messages::message_header header;
 			header.parse(buffer.data());
 			node n;
@@ -198,6 +200,7 @@ namespace GraceDHT
 					Messages::ping<true> ping_message;
 					ping_message.parse(buffer, header);
 					handle_ping_request(ping_message, endpoint);
+					std::cout << " [ ping ]";
 					break;
 				}
 				case Messages::PING_RESPONSE:
@@ -205,6 +208,7 @@ namespace GraceDHT
 					Messages::ping<false> ping_message;
 					ping_message.parse(buffer, header);
 					_sent_messages.erase(header.transaction_id);
+					std::cout << " [ pong ]";
 					break;
 				}
 				case Messages::FIND_NODE_REQUEST:
@@ -212,6 +216,7 @@ namespace GraceDHT
 					Messages::find_node<true> find_node_message;
 					find_node_message.parse(buffer, header);
 					handle_find_node_request(find_node_message, endpoint);
+					std::cout << " [ find request ]";
 					break;
 				}
 				case Messages::FIND_NODE_RESPONSE:
@@ -220,9 +225,11 @@ namespace GraceDHT
 					find_node_message.parse(buffer, header);
 					handle_find_node_response(find_node_message, endpoint);
 					_sent_messages.erase(header.transaction_id);
+					std::cout << " [ find response ]";
 					break;
 				}
 			}
+			std::cout << std::endl;
 			_routing_table->update(n);
 			
 		}
@@ -230,8 +237,11 @@ namespace GraceDHT
 		template<typename Message>
 		void send_message(Message &message, const udp::endpoint &endpoint)
 		{
-			message.header.sender_id = _main_node.id;
-			_network_service->send(message, endpoint);		
+			if (endpoint != _main_node.endpoint)
+			{
+				message.header.sender_id = _main_node.id;
+				_network_service->send(message, endpoint);
+			}
 			//_sent_messages[message.header.transaction_id] = message.header;
 		}
 
@@ -240,17 +250,20 @@ namespace GraceDHT
 			std::thread([func, interval]() {
 				while (true)
 				{
-					func();
 					std::this_thread::sleep_for(std::chrono::milliseconds(interval));
+					func();
 				}
 			}).detach();
 		}
 
 		void periodic_task()
 		{
-			auto random_node = _routing_table->get_random_good_node();
-			Messages::find_node<true> find_message(_main_node, _main_node.id, get_random(), TTL);
-			send_message(find_message, random_node->endpoint);
+			/*auto random_node = _routing_table->get_random_good_node();
+			if (random_node != nullptr)
+			{
+				Messages::find_node<true> find_message(_main_node, _main_node.id, get_random(), TTL);
+				send_message(find_message, random_node->endpoint);
+			}*/
 			_routing_table->ping_nodes();
 		}
 

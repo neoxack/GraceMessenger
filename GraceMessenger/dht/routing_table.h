@@ -12,19 +12,18 @@
 
 namespace GraceDHT
 {
-	class dht;
 	class routing_table
 	{
 	public:
 
-		routing_table(const node *main_node, network_service *network_service) :_main_node(main_node), _network_service(network_service)
+		routing_table(const node &main_node, network_service &network_service) :_main_node(main_node), _network_service(network_service)
 		{
 		}
 
 		void update(const node& node)
 		{
-			_m.lock();
-			if (node.id != _main_node->id)
+			std::lock_guard<std::mutex> lock(_m);
+			if (node.id != _main_node.id)
 			{
 				auto findIter = std::find_if(_nodes.begin(), _nodes.end(), [&](const node_entry &n){return n.node.id == node.id; });
 				if (findIter == _nodes.end())
@@ -38,8 +37,8 @@ namespace GraceDHT
 					}
 					else
 					{
-						auto n = _nodes.begin();
-						ping(n->node);
+						//auto n = _nodes.begin();
+						//ping(n->node);
 						_nodes.pop_front();
 						_nodes.push_front(entry);
 					}
@@ -50,7 +49,6 @@ namespace GraceDHT
 					_nodes.splice(_nodes.end(), _nodes, findIter);
 				}
 			}
-			_m.unlock();
 		}
 
 		const node* find_node(const node_id &id) const
@@ -84,7 +82,7 @@ namespace GraceDHT
 			return std::vector<const node*>();
 		}
 
-		const node* get_random_good_node()
+		const node* get_random_good_node() const
 		{
 			using namespace boolinq;
 			if (_nodes.size() != 0)
@@ -113,7 +111,7 @@ namespace GraceDHT
 			return nullptr;
 		}
 
-		size_t get_nodes_count()
+		size_t get_nodes_count() const
 		{
 			return _nodes.size();
 		}
@@ -121,36 +119,33 @@ namespace GraceDHT
 		void ping(const node &node)
 		{
 			Messages::ping<true> ping_message(get_random(), get_random());
-			ping_message.header.sender_id = _main_node->id;
-			_network_service->send(ping_message, node.endpoint);
+			ping_message.header.sender_id = _main_node.id;
+			_network_service.send(ping_message, node.endpoint);
 		}
 
 		void ping_nodes()
-		{
-			_m.lock();
-			
+		{	
 			auto current_time = get_timestamp();
-			_nodes.remove_if([&](const node_entry& entry)
+			//_nodes.remove_if([&](const node_entry& entry)
+			//{
+			//	auto diff = current_time - entry.last_activity;
+			//	if (diff > EXPIRED_TIME) return true;
+			//	return false;
+			//});
+			for (auto it = _nodes.begin(); it != _nodes.end(); ++it)
 			{
-				auto diff = current_time - entry.last_activity;
-				if (diff > EXPIRED_TIME) return true;
-				return false;
-			});
-			for (auto &entry : _nodes)
-			{
-				auto diff = current_time - entry.last_activity;
+				auto diff = current_time - it->last_activity;
 				if (diff > PING_PERIOD)
 				{
-					ping(entry.node);
+					ping(it->node);
 				}		
 			}
-			_m.unlock();
 		}
 
 	private:
-		const node *_main_node;
-	    network_service *_network_service;
 		std::mutex _m;
+		const node &_main_node;
+	    network_service &_network_service;
 		std::list<node_entry> _nodes;
 		
 	};

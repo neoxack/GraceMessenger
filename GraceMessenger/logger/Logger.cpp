@@ -26,7 +26,7 @@ std::string logger::getTimestamp()
 
 void logger::log(Level nLevel, const std::string &oMessage, const std::string &func)
 {
-	const static char* LevelStr[] = { "Finest", "Finer", "Fine", "Config", "Info", "Warning", "Severe" };
+	const static char* LevelStr[] = { "Error", "Config", "Info", "Warning", "Severe" };
 	
 	m_oMutex.lock();
 	m_oFile << '[' << getTimestamp() << ']' 

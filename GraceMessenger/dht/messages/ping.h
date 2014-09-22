@@ -6,6 +6,7 @@ namespace GraceDHT
 {
 	namespace Messages
 	{
+		#pragma pack(1)
 		template <bool IsRequest>
 		class ping
 		{
