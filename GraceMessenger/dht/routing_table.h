@@ -51,8 +51,9 @@ namespace GraceDHT
 			}
 		}
 
-		const node* find_node(const node_id &id) const
+		const node* find_node(const node_id &id)
 		{	
+			std::lock_guard<std::mutex> lock(_m);
 			auto findIter = std::find_if(_nodes.begin(), _nodes.end(), [&](const node_entry &n){return n.node.id == id; });
 			if (findIter == _nodes.end())
 			{
@@ -61,8 +62,9 @@ namespace GraceDHT
 			return &(findIter->node);
 		}
 
-		std::vector<const node*> find_closest_nodes(const node_id &id, size_t max_results) const
+		std::vector<const node*> find_closest_nodes(const node_id &id, size_t max_results)
 		{
+			std::lock_guard<std::mutex> lock(_m);
 			using namespace boolinq;
 			if (_nodes.size() != 0) 
 			{
@@ -82,8 +84,9 @@ namespace GraceDHT
 			return std::vector<const node*>();
 		}
 
-		const node* get_random_good_node() const
+		const node* get_random_good_node()
 		{
+			std::lock_guard<std::mutex> lock(_m);
 			using namespace boolinq;
 			if (_nodes.size() != 0)
 			{

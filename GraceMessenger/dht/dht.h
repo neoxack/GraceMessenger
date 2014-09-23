@@ -64,7 +64,7 @@ namespace GraceDHT
 		{
 			if (_state == Started)
 			{
-				timer_start(std::bind(&dht::periodic_task, this), FIND_PERIOD);
+				//timer_start(std::bind(&dht::periodic_task, this), FIND_PERIOD);
 				_bootstrap_callback = callback;
 				_routing_table->update(node);
 				Messages::find_node<true> find_message(_main_node, _main_node.id, get_random(), TTL);
@@ -247,11 +247,12 @@ namespace GraceDHT
 
 		void timer_start(std::function<void(void)> func, size_t interval)
 		{
-			std::thread([func, interval]() {
+			std::thread([&]() 
+			{
 				while (true)
 				{
 					std::this_thread::sleep_for(std::chrono::milliseconds(interval));
-					func();
+					_network_service->async_run(func);
 				}
 			}).detach();
 		}
@@ -264,7 +265,7 @@ namespace GraceDHT
 				Messages::find_node<true> find_message(_main_node, _main_node.id, get_random(), TTL);
 				send_message(find_message, random_node->endpoint);
 			}*/
-			_routing_table->ping_nodes();
+			//_routing_table->ping_nodes();
 		}
 
 		dht_state _state;
