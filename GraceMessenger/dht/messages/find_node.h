@@ -50,7 +50,7 @@ namespace GraceDHT
 
 			size_t size() const
 			{
-				return sizeof(node_id) + sizeof(message_header) + sizeof(node) + sizeof(node) + sizeof(ttl);
+				return sizeof(node_id) + sizeof(message_header) + sizeof(node) * 2 + sizeof(ttl);
 			}
 
 			message_header header;

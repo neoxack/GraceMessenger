@@ -111,14 +111,16 @@ int _tmain(int argc, _TCHAR* argv[])
 		{
 			std::cout << (success ? "success" : "fail") << std::endl;
 		});
+
+
+		int a;
+		std::cin >> a;
 	}
 	catch (std::exception e)
 	{
 		std::cout << e.what() << std::endl;
+		LOG(Error, e.what());
 	}
-
-	int a;
-	std::cin >> a;
 	return 0;
 }
 

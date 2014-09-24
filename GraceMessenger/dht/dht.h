@@ -64,7 +64,7 @@ namespace GraceDHT
 		{
 			if (_state == Started)
 			{
-				//timer_start(std::bind(&dht::periodic_task, this), FIND_PERIOD);
+				timer_start(FIND_PERIOD);
 				_bootstrap_callback = callback;
 				_routing_table->update(node);
 				Messages::find_node<true> find_message(_main_node, _main_node.id, get_random(), TTL);
@@ -134,7 +134,8 @@ namespace GraceDHT
 			if (_state == Started)
 			{
 				_state = Bootstrapped;
-				_bootstrap_callback(true, 0);
+				if (_bootstrap_callback != nullptr)
+					_bootstrap_callback(true, 0);
 			}
 
 			Messages::ping<false> ping_response(ping_message.header.transaction_id, ping_message.random);
@@ -171,7 +172,8 @@ namespace GraceDHT
 			if (_state == Started)
 			{
 				_state = Bootstrapped;
-				_bootstrap_callback(true, 0);
+				if (_bootstrap_callback != nullptr)
+					_bootstrap_callback(true, 0);
 			}
 			if (_state == Bootstrapped)
 			{
@@ -245,27 +247,27 @@ namespace GraceDHT
 			//_sent_messages[message.header.transaction_id] = message.header;
 		}
 
-		void timer_start(std::function<void(void)> func, size_t interval)
+		void timer_start(size_t interval)
 		{
-			std::thread([&]() 
+			std::thread([=]() 
 			{
 				while (true)
 				{
 					std::this_thread::sleep_for(std::chrono::milliseconds(interval));
-					_network_service->async_run(func);
+					_network_service->async_run(std::bind(&dht::periodic_task, this));
 				}
 			}).detach();
 		}
 
 		void periodic_task()
 		{
-			/*auto random_node = _routing_table->get_random_good_node();
+			auto random_node = _routing_table->get_random_good_node();
 			if (random_node != nullptr)
 			{
 				Messages::find_node<true> find_message(_main_node, _main_node.id, get_random(), TTL);
 				send_message(find_message, random_node->endpoint);
-			}*/
-			//_routing_table->ping_nodes();
+			}
+			_routing_table->ping_nodes();
 		}
 
 		dht_state _state;

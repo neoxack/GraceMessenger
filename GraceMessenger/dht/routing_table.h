@@ -37,8 +37,8 @@ namespace GraceDHT
 					}
 					else
 					{
-						//auto n = _nodes.begin();
-						//ping(n->node);
+						auto n = _nodes.begin();
+						ping(n->node);
 						_nodes.pop_front();
 						_nodes.push_front(entry);
 					}
@@ -128,13 +128,14 @@ namespace GraceDHT
 
 		void ping_nodes()
 		{	
+			std::lock_guard<std::mutex> lock(_m);
 			auto current_time = get_timestamp();
-			//_nodes.remove_if([&](const node_entry& entry)
-			//{
-			//	auto diff = current_time - entry.last_activity;
-			//	if (diff > EXPIRED_TIME) return true;
-			//	return false;
-			//});
+			_nodes.remove_if([&](const node_entry& entry)
+			{
+				auto diff = current_time - entry.last_activity;
+				if (diff > EXPIRED_TIME) return true;
+				return false;
+			});
 			for (auto it = _nodes.begin(); it != _nodes.end(); ++it)
 			{
 				auto diff = current_time - it->last_activity;
