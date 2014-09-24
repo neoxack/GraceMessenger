@@ -14,6 +14,7 @@ namespace GraceDHT
 	public:
 		network_service(asio::io_service& io_service, const asio::ip::udp::endpoint &endpoint, handler h) :
 			_io_service(io_service),
+			_my_endpoint(endpoint),
 			_socket(io_service, endpoint),
 			_handler(h)
 		{
@@ -39,11 +40,14 @@ namespace GraceDHT
 		template<typename Message>
 		void send(const Message &message, const asio::ip::udp::endpoint &endpoint)
 		{
-			message.serialize(_send_buf);
-			_to_endpoint = endpoint;
-			_socket.async_send_to(asio::buffer(_send_buf, message.size()), _to_endpoint, std::bind(&network_service::handle_send, this,
-				std::placeholders::_1,
-				std::placeholders::_2));
+			if (_is_started && endpoint != _my_endpoint)
+			{
+				message.serialize(_send_buf);
+				_to_endpoint = endpoint;
+				_socket.async_send_to(asio::buffer(_send_buf, message.size()), _to_endpoint, std::bind(&network_service::handle_send, this,
+					std::placeholders::_1,
+					std::placeholders::_2));
+			}
 		}
 
 		void async_run(std::function<void(void)> func)
@@ -93,6 +97,7 @@ namespace GraceDHT
 		bool _is_started;
 		handler _handler;
 		asio::ip::udp::socket _socket;
+		asio::ip::udp::endpoint _my_endpoint;
 		asio::ip::udp::endpoint _to_endpoint;
 		asio::ip::udp::endpoint _from_endpoint;
 		std::array<char, BUF_SIZE> _send_buf;

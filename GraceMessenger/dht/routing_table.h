@@ -22,14 +22,14 @@ namespace GraceDHT
 
 		void update(const node& node)
 		{
-			std::lock_guard<std::mutex> lock(_m);
 			if (node.id != _main_node.id)
 			{
-				auto findIter = std::find_if(_nodes.begin(), _nodes.end(), [&](const node_entry &n){return n.node.id == node.id; });
+				auto current_time = get_timestamp();
+				auto findIter = std::find_if(_nodes.begin(), _nodes.end(), [node](const node_entry &n){return n.node.id == node.id; });
 				if (findIter == _nodes.end())
 				{
 					node_entry entry(node);
-					entry.last_activity = get_timestamp();
+					entry.last_activity = current_time;
 
 					if (_nodes.size() < K)
 					{
@@ -46,6 +46,7 @@ namespace GraceDHT
 				else
 				{
 					findIter->node.endpoint = node.endpoint;
+					findIter->last_activity = current_time;
 					_nodes.splice(_nodes.end(), _nodes, findIter);
 				}
 			}
@@ -53,8 +54,7 @@ namespace GraceDHT
 
 		const node* find_node(const node_id &id)
 		{	
-			std::lock_guard<std::mutex> lock(_m);
-			auto findIter = std::find_if(_nodes.begin(), _nodes.end(), [&](const node_entry &n){return n.node.id == id; });
+			auto findIter = std::find_if(_nodes.begin(), _nodes.end(), [id](const node_entry &n){return n.node.id == id; });
 			if (findIter == _nodes.end())
 			{
 				return nullptr;
@@ -64,7 +64,6 @@ namespace GraceDHT
 
 		std::vector<const node*> find_closest_nodes(const node_id &id, size_t max_results)
 		{
-			std::lock_guard<std::mutex> lock(_m);
 			using namespace boolinq;
 			if (_nodes.size() != 0) 
 			{
@@ -75,7 +74,7 @@ namespace GraceDHT
 				}
 
 				auto dst = from(tmpList)
-					.orderBy([&](const node *a){return bit_position(id, a->id); })
+					.orderBy([id](const node *a){return bit_position(id, a->id); })
 					.take(max_results)
 					.toVector();
 				
@@ -86,7 +85,6 @@ namespace GraceDHT
 
 		const node* get_random_good_node()
 		{
-			std::lock_guard<std::mutex> lock(_m);
 			using namespace boolinq;
 			if (_nodes.size() != 0)
 			{
@@ -98,7 +96,7 @@ namespace GraceDHT
 
 				auto current_time = get_timestamp();
 				auto dst = from(tmpList)
-					.where([&](const node_entry *a)
+					.where([current_time](const node_entry *a)
 					{
 						auto diff = current_time - a->last_activity;
 						return diff < EXPIRED_TIME / 2;
@@ -128,9 +126,8 @@ namespace GraceDHT
 
 		void ping_nodes()
 		{	
-			std::lock_guard<std::mutex> lock(_m);
 			auto current_time = get_timestamp();
-			_nodes.remove_if([&](const node_entry& entry)
+			_nodes.remove_if([current_time](const node_entry& entry)
 			{
 				auto diff = current_time - entry.last_activity;
 				if (diff > EXPIRED_TIME) return true;
@@ -147,7 +144,6 @@ namespace GraceDHT
 		}
 
 	private:
-		std::mutex _m;
 		const node &_main_node;
 	    network_service &_network_service;
 		std::list<node_entry> _nodes;
