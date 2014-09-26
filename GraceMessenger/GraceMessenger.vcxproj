@@ -81,9 +81,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="boolinq.h" />
     <ClInclude Include="callbacks.h" />
     <ClInclude Include="contact_list.h" />
+    <ClInclude Include="cpplinq.hpp" />
     <ClInclude Include="crypto\aes256.h" />
     <ClInclude Include="crypto\crypto.h" />
     <ClInclude Include="dht\constants.h" />

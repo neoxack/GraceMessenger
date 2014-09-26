@@ -3,7 +3,7 @@
 #include <mutex>
 
 #include "node.h"
-#include "../boolinq.h"
+#include "../cpplinq.hpp"
 #include "constants.h"
 #include "node_entry.h"
 #include "network_service.h"
@@ -64,7 +64,7 @@ namespace GraceDHT
 
 		std::vector<const node*> find_closest_nodes(const node_id &id, size_t max_results)
 		{
-			using namespace boolinq;
+			using namespace cpplinq;
 			if (_nodes.size() != 0) 
 			{
 				std::vector<const node*> tmpList;
@@ -74,9 +74,9 @@ namespace GraceDHT
 				}
 
 				auto dst = from(tmpList)
-					.orderBy([id](const node *a){return bit_position(id, a->id); })
-					.take(max_results)
-					.toVector();
+					>> orderby_ascending([id](const node*a){return bit_position(id, a->id); })
+					>> take(max_results)
+					>> to_vector();
 				
 				return dst;
 			}
@@ -85,7 +85,7 @@ namespace GraceDHT
 
 		const node* get_random_good_node()
 		{
-			using namespace boolinq;
+			using namespace cpplinq;
 			if (_nodes.size() != 0)
 			{
 				std::vector<const node_entry*> tmpList;
@@ -96,12 +96,12 @@ namespace GraceDHT
 
 				auto current_time = get_timestamp();
 				auto dst = from(tmpList)
-					.where([current_time](const node_entry *a)
+					>> where([current_time](const node_entry *a)
 					{
 						auto diff = current_time - a->last_activity;
 						return diff < EXPIRED_TIME / 2;
 					})
-					.toVector();
+					>> to_vector();
 				if (dst.size() == 0)
 					return nullptr;
 
