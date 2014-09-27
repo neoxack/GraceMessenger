@@ -249,7 +249,7 @@ namespace GraceDHT
 
 		void timer_start(size_t interval)
 		{
-			std::thread([=]() 
+			std::thread([this, interval]()
 			{
 				while (true)
 				{

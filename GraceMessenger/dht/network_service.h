@@ -25,7 +25,7 @@ namespace GraceDHT
 		{
 			_is_started = true;
 			recv();
-			std::thread([&]() 
+			std::thread([this]() 
 			{
 				_io_service.run();
 			}).detach();		
