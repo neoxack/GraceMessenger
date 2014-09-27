@@ -23,14 +23,14 @@ namespace GraceMessenger
 			session(const session& other) = delete; // non construction-copyable
 			session& operator=(const session&) = delete; // non copyable
 
-			explicit session(asio::ip::tcp::socket socket, network_service& network_service, message_handler& handler):
+			explicit session(asio::ip::tcp::socket socket, network_service& network_service, message_handler& handler, user &user) :
 				_socket(std::move(socket)),
 				_network_service(network_service),
-				_message_handler(handler)
+				_message_handler(handler),
+				_user(user)
 			{
 				
 			}
-
 
 
 			/// Start the first asynchronous operation for the connection.
@@ -82,13 +82,13 @@ namespace GraceMessenger
 			
 			network_service& _network_service;
 			message_handler& _message_handler;
+			user &_user;
 			message_parser _message_parser;
 			asio::ip::tcp::socket _socket;
 
 			enum { max_msg = 2048 };
 			std::array<uint8_t, max_msg> _read_buffer;
 			std::array<uint8_t, max_msg> _write_buffer;
-			Crypto::shared_key _shared_key;
 		};
 	}
 }
