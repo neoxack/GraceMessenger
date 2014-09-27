@@ -21,7 +21,7 @@ namespace GraceMessenger
 			}
 
 			/// Add the specified session to the manager and start it.
-			void start(std::shared_ptr<session> cs)
+			void start(std::shared_ptr<session> s)
 			{
 				
 			}

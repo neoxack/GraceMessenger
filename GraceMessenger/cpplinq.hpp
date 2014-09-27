@@ -3089,7 +3089,7 @@ namespace cpplinq
                     {
                         return true;
                     }
-                    else if (has_value && has_value && range.get_ptr () == v.range.get_ptr ())
+                    else if (has_value && v.has_value && range.get_ptr () == v.range.get_ptr ())
                     {
                         return true;
                     }
