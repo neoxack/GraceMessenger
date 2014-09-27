@@ -96,12 +96,18 @@
     <ClInclude Include="cpplinq.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="network\message_parser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="network\messages\message_header.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="network\message_handler.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraceMessenger.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="messenger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="crypto\curve25519.h">

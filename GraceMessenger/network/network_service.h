@@ -2,20 +2,31 @@
 
 #include "../status.h"
 #include "../message.h"
+#include "session.h"
 #include "../user.h"
 
 namespace GraceMessenger
 {
-	class network_service
+	class message;
+	namespace Network
 	{
-	public:
-		status send_message(const message &mesage, const user &user)
+		class session;
+		class network_service
 		{
-			return status();
-		}
+		public:
+			status send_message(const GraceMessenger::message &mesage, const user &user)
+			{
+				return status();
+			}
 
-	private:
-		
-	};
+			void stop(std::shared_ptr<session> session)
+			{
+
+			}
+
+		private:
+
+		};
+	}
 
 }

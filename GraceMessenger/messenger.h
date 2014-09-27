@@ -39,12 +39,13 @@ namespace GraceMessenger
 			}
 		}
 
-
+		
+		
 
 
 	private:
 		std::unique_ptr<GraceDHT::dht> _dht;
-		std::unique_ptr<network_service> _network_service;
+		std::unique_ptr<Network::network_service> _network_service;
 		callbacks _callbacks;
 		config _config;
 		contact_list _contact_list;

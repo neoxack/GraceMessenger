@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "user.h"
+#include "network/session.h"
 
 namespace GraceMessenger
 {
@@ -11,6 +12,7 @@ namespace GraceMessenger
 	class message
 	{
 	public:
+		
 
 	private:
 		uint32_t _id;

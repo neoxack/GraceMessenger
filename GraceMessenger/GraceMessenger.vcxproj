@@ -103,6 +103,9 @@
     <ClInclude Include="message.h" />
     <ClInclude Include="messenger.h" />
     <ClInclude Include="config.h" />
+    <ClInclude Include="network\messages\message_header.h" />
+    <ClInclude Include="network\message_handler.h" />
+    <ClInclude Include="network\message_parser.h" />
     <ClInclude Include="network\network_service.h" />
     <ClInclude Include="network\session.h" />
     <ClInclude Include="status.h" />
@@ -114,7 +117,6 @@
     <ClCompile Include="crypto\curve25519.h" />
     <ClCompile Include="GraceMessenger.cpp" />
     <ClCompile Include="logger\Logger.cpp" />
-    <ClCompile Include="messenger.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
