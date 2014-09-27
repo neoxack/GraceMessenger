@@ -4,6 +4,7 @@
 #include "../message.h"
 #include "session.h"
 #include "../user.h"
+#include <unordered_set>
 
 namespace GraceMessenger
 {
@@ -19,13 +20,27 @@ namespace GraceMessenger
 				return status();
 			}
 
-			void stop(std::shared_ptr<session> session)
+			/// Add the specified session to the manager and start it.
+			void start(std::shared_ptr<session> cs)
 			{
-
+				
 			}
 
-		private:
+			/// Stop the specified session.
+			void stop(std::shared_ptr<session> s)
+			{
+				
+			}
 
+			/// Stop all sessions.
+			void stop_all()
+			{
+				
+			}
+
+
+		private:
+			std::unordered_set<std::shared_ptr<session>> sessions_;
 		};
 	}
 
