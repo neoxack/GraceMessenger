@@ -25,7 +25,7 @@ namespace GraceDHT
 			if (node.id != _main_node.id)
 			{
 				auto current_time = get_timestamp();
-				auto findIter = std::find_if(_nodes.begin(), _nodes.end(), [node](const node_entry &n){return n.node.id == node.id; });
+				auto findIter = find_if(_nodes.begin(), _nodes.end(), [node](const node_entry &n){return n.node.id == node.id; });
 				if (findIter == _nodes.end())
 				{
 					node_entry entry(node);
@@ -54,7 +54,7 @@ namespace GraceDHT
 
 		const node* find_node(const node_id &id)
 		{	
-			auto findIter = std::find_if(_nodes.begin(), _nodes.end(), [id](const node_entry &n){return n.node.id == id; });
+			auto findIter = find_if(_nodes.begin(), _nodes.end(), [id](const node_entry &n){return n.node.id == id; });
 			if (findIter == _nodes.end())
 			{
 				return nullptr;

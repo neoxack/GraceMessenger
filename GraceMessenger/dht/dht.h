@@ -67,7 +67,7 @@ namespace GraceDHT
 				timer_start(FIND_PERIOD);
 				_bootstrap_callback = callback;
 				_routing_table->update(node);
-				Messages::find_node<true> find_message(_main_node, _main_node.id, get_random(), TTL);
+				Messages::find_node<Messages::Request> find_message(_main_node, _main_node.id, get_random(), TTL);
 				send_message(find_message, node.endpoint);
 				return true;
 			}
@@ -104,7 +104,7 @@ namespace GraceDHT
 				_found_nodes_callbacks.insert(make_pair(id, callback));
 				for (auto &node : closest_nodes)
 				{
-					Messages::find_node<true> find_message(_main_node, id, get_random(), TTL);
+					Messages::find_node<Messages::Request> find_message(_main_node, id, get_random(), TTL);
 					send_message(find_message, node->endpoint);
 				}			
 			}
@@ -142,12 +142,12 @@ namespace GraceDHT
 			send_message(ping_response, endpoint);
 		}
 
-		void handle_find_node_request(const Messages::find_node<true> &find_node_message, const udp::endpoint &endpoint)
+		void handle_find_node_request(const Messages::find_node<Messages::Request> &find_node_message, const udp::endpoint &endpoint)
 		{	
 			auto node = _routing_table->find_node(find_node_message.find_id);
 			if (node != nullptr && find_node_message.header.sender_id != find_node_message.find_id)
 			{
-				Messages::find_node<false> message(find_node_message.finder, find_node_message.find_id, find_node_message.header.transaction_id, *node);
+				Messages::find_node<Messages::Response> message(find_node_message.finder, find_node_message.find_id, find_node_message.header.transaction_id, *node);
 				send_message(message, find_node_message.finder.endpoint);
 			}
 			else
@@ -157,7 +157,7 @@ namespace GraceDHT
 					auto closest_nodes = _routing_table->find_closest_nodes(find_node_message.find_id, ALPHA);
 					for (auto &node : closest_nodes)
 					{
-						Messages::find_node<true> find_message(find_node_message.finder, find_node_message.find_id, find_node_message.header.transaction_id, find_node_message.ttl - 1);
+						Messages::find_node<Messages::Request> find_message(find_node_message.finder, find_node_message.find_id, find_node_message.header.transaction_id, find_node_message.ttl - 1);
 						send_message(find_message, node->endpoint);
 					}
 				}
@@ -167,7 +167,7 @@ namespace GraceDHT
 			_routing_table->update(find_node_message.finder);						
 		}
 
-		void handle_find_node_response(const Messages::find_node<false> &find_node_message, const udp::endpoint &endpoint)
+		void handle_find_node_response(const Messages::find_node<Messages::Response> &find_node_message, const udp::endpoint &endpoint)
 		{
 			if (_state == Started)
 			{
@@ -188,6 +188,7 @@ namespace GraceDHT
 
 		void handle(const udp::endpoint & endpoint, const std::array<char, BUF_SIZE> & buffer, size_t bytes_recvd)
 		{
+			using namespace Messages;
 			std::cout << "handle() " << _main_node.endpoint.port() << " <- " << endpoint.port() << ", bytes received: " << bytes_recvd;
 			Messages::message_header header;
 			header.parse(buffer.data());
@@ -197,33 +198,33 @@ namespace GraceDHT
 			
 			switch (header.type)
 			{
-				case Messages::PING_REQUEST:
+				case PING_REQUEST:
 				{
-					Messages::ping<true> ping_message;
+					ping<true> ping_message;
 					ping_message.parse(buffer, header);
 					handle_ping_request(ping_message, endpoint);
 					std::cout << " [ ping ]";
 					break;
 				}
-				case Messages::PING_RESPONSE:
+				case PING_RESPONSE:
 				{
-					Messages::ping<false> ping_message;
+					ping<false> ping_message;
 					ping_message.parse(buffer, header);
 					_sent_messages.erase(header.transaction_id);
 					std::cout << " [ pong ]";
 					break;
 				}
-				case Messages::FIND_NODE_REQUEST:
+				case FIND_NODE_REQUEST:
 				{
-					Messages::find_node<true> find_node_message;
+					Messages::find_node<Request> find_node_message;
 					find_node_message.parse(buffer, header);
 					handle_find_node_request(find_node_message, endpoint);
 					std::cout << " [ find request ]";
 					break;
 				}
-				case Messages::FIND_NODE_RESPONSE:
+				case FIND_NODE_RESPONSE:
 				{
-					Messages::find_node<false> find_node_message;
+					Messages::find_node<Response> find_node_message;
 					find_node_message.parse(buffer, header);
 					handle_find_node_response(find_node_message, endpoint);
 					_sent_messages.erase(header.transaction_id);
@@ -264,7 +265,7 @@ namespace GraceDHT
 			auto random_node = _routing_table->get_random_good_node();
 			if (random_node != nullptr)
 			{
-				Messages::find_node<true> find_message(_main_node, _main_node.id, get_random(), TTL);
+				Messages::find_node<Messages::Request> find_message(_main_node, _main_node.id, get_random(), TTL);
 				send_message(find_message, random_node->endpoint);
 			}
 			_routing_table->ping_nodes();

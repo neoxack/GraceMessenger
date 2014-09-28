@@ -9,7 +9,13 @@ namespace GraceDHT
 	{
 		using namespace asio::ip;
 
-		template <bool IsRequest>
+		enum message_type
+		{
+			Request,
+			Response
+		};
+
+		template <message_type Type>
 		class find_node
 		{
 			
@@ -21,7 +27,7 @@ namespace GraceDHT
 				ttl(ttl),
 				header(transaction_id, sizeof(ttl) + sizeof(message_header) + sizeof(node_id) + sizeof(node))
 			{
-				header.type = IsRequest ? FIND_NODE_REQUEST : FIND_NODE_RESPONSE;
+				header.type = Type == Request ? FIND_NODE_REQUEST : FIND_NODE_RESPONSE;
 			}
 
 			find_node(const node &finder, const node_id &find_id, uint32_t transaction_id, const node &node) :
@@ -30,7 +36,7 @@ namespace GraceDHT
 				found_node(node),
 				header(transaction_id, sizeof(ttl) + sizeof(message_header) + sizeof(node_id) + sizeof(node) * 2)
 			{
-				header.type = IsRequest ? FIND_NODE_REQUEST : FIND_NODE_RESPONSE;
+				header.type = Type == Request ? FIND_NODE_REQUEST : FIND_NODE_RESPONSE;
 			}
 
 			find_node()
@@ -57,8 +63,7 @@ namespace GraceDHT
 			node finder;
 			node_id find_id;
 			uint16_t ttl;
-			node found_node;
-			
+			node found_node;			
 		};
 
 	}
