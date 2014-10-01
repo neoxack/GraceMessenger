@@ -190,7 +190,7 @@ namespace GraceDHT
 		{
 			using namespace Messages;
 			std::cout << "handle() " << _main_node.endpoint.port() << " <- " << endpoint.port() << ", bytes received: " << bytes_recvd;
-			Messages::message_header header;
+			message_header header;
 			header.parse(buffer.data());
 			node n;
 			n.id = header.sender_id;

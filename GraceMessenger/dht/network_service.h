@@ -88,7 +88,7 @@ namespace GraceDHT
 
 		void recv()
 		{
-			_socket.async_receive_from(asio::buffer(_recv_buf, BUF_SIZE), _from_endpoint, std::bind(&network_service::handle_receive, this,
+			_socket.async_receive_from(asio::buffer(_recv_buf), _from_endpoint, std::bind(&network_service::handle_receive, this,
 				std::placeholders::_1,
 				std::placeholders::_2));
 		}
