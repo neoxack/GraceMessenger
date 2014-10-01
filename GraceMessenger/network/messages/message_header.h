@@ -7,9 +7,11 @@ namespace GraceMessenger
 	{
 		typedef enum type
 		{
-			
+			AddFriend = 0x6FF9
 		} m_type;
 
+
+		#pragma pack(1)
 		typedef struct message_header
 		{
 			uint16_t type;

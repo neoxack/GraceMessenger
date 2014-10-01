@@ -8,7 +8,7 @@
 #include "message_handler.h"
 #include "../logger/log.h"
 #include "../message.h"
-
+#include "messages/add_friend_message.h"
 
 
 namespace GraceMessenger
@@ -49,6 +49,25 @@ namespace GraceMessenger
 
 		private:
 
+			void handle_add_friend_message(const add_friend_message &message)
+			{
+				
+			}
+
+			void handle(message_header header, const std::array<uint8_t, MAX_MESSAGE_SIZE> &data)
+			{
+				switch (header.type)
+				{
+					case AddFriend:
+					{
+						add_friend_message message;
+						message.parse(data, header);
+						handle_add_friend_message(message);
+						break;
+					}
+				}
+			}
+
 			void do_read()
 			{
 				auto self(shared_from_this());
@@ -59,11 +78,11 @@ namespace GraceMessenger
 					{
 						message_parser::result_type result;
 						message_header header;
-						result = _message_parser.parse(header, _read_buffer.data(), bytes_transferred);
+						result = _message_parser.parse(header, _read_buffer, bytes_transferred);
 
 						if (result == message_parser::good)
 						{
-							_message_handler.handle(header, _read_buffer.data(), bytes_transferred);
+							handle(header, _read_buffer);
 						}
 						else if (result == message_parser::bad)
 						{
@@ -87,8 +106,8 @@ namespace GraceMessenger
 			asio::ip::tcp::socket _socket;
 
 			enum { max_msg = 2048 };
-			std::array<uint8_t, max_msg> _read_buffer;
-			std::array<uint8_t, max_msg> _write_buffer;
+			std::array<uint8_t, MAX_MESSAGE_SIZE> _read_buffer;
+			std::array<uint8_t, MAX_MESSAGE_SIZE> _write_buffer;
 		};
 	}
 }

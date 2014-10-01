@@ -103,6 +103,8 @@
     <ClInclude Include="message.h" />
     <ClInclude Include="messenger.h" />
     <ClInclude Include="config.h" />
+    <ClInclude Include="network\constants.h" />
+    <ClInclude Include="network\messages\add_friend_message.h" />
     <ClInclude Include="network\messages\message_header.h" />
     <ClInclude Include="network\message_handler.h" />
     <ClInclude Include="network\message_parser.h" />
