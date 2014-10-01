@@ -54,7 +54,7 @@ namespace GraceMessenger
 				
 			}
 
-			void handle(message_header header, const std::array<uint8_t, MAX_MESSAGE_SIZE> &data)
+			void handle(const message_header &header, const std::array<uint8_t, MAX_MESSAGE_SIZE> &data)
 			{
 				switch (header.type)
 				{

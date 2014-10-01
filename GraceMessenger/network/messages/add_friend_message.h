@@ -14,7 +14,7 @@ namespace GraceMessenger
 		class add_friend_message
 		{
 		public:
-			add_friend_message(const user_id sender, const std::wstring &mes):
+			add_friend_message(const user_id &sender, const std::wstring &mes):
 				sender(sender)
 			{
 				header.type = AddFriend;
