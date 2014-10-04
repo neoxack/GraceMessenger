@@ -9,6 +9,7 @@
 #include "../logger/log.h"
 #include "../message.h"
 #include "messages/add_friend_message.h"
+#include "../contact_list.h"
 
 
 namespace GraceMessenger
@@ -23,11 +24,13 @@ namespace GraceMessenger
 			session(const session& other) = delete; // non construction-copyable
 			session& operator=(const session&) = delete; // non copyable
 
-			explicit session(asio::ip::tcp::socket socket, network_service& network_service, message_handler& handler, user &user) :
+			explicit session(messenger &messenger, asio::ip::tcp::socket socket, network_service& network_service, message_handler& handler, user &user, contact_list &contact_list) :
+				_messenger(messenger),
 				_socket(std::move(socket)),
 				_network_service(network_service),
 				_message_handler(handler),
-				_user(user)
+				_user(user),
+				_contact_list(contact_list)
 			{
 				
 			}
@@ -51,7 +54,14 @@ namespace GraceMessenger
 
 			void handle_add_friend_message(const add_friend_message &message)
 			{
-				
+				if (_contact_list.contains(message.sender))
+				{
+					
+				}
+				else
+				{
+					//TODO: friend request callback
+				}
 			}
 
 			void handle(const message_header &header, const std::array<uint8_t, MAX_MESSAGE_SIZE> &data)
@@ -99,9 +109,11 @@ namespace GraceMessenger
 			}
 
 			
-			network_service& _network_service;
-			message_handler& _message_handler;
+			messenger &_messenger;
+			network_service &_network_service;
+			message_handler &_message_handler;
 			user &_user;
+			contact_list &_contact_list;
 			message_parser _message_parser;
 			asio::ip::tcp::socket _socket;
 

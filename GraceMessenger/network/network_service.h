@@ -40,7 +40,7 @@ namespace GraceMessenger
 
 
 		private:
-			std::unordered_set<std::shared_ptr<session>> sessions_;
+			std::unordered_set<std::shared_ptr<session>> _sessions;
 		};
 	}
 
