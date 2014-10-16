@@ -4,11 +4,13 @@
 #include "crypto/crypto.h"
 #include "crypto/aes256.h"
 #include "logger/log.h"
+#include "crypto/sha1.h"
 
 #define DUMP(s, i, buf, sz)  {printf(s);                   \
                               for (i = 0; i < (sz);i++)    \
                                   printf("%02x ", buf[i]); \
                               printf("\n");}
+
 
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -56,6 +58,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	//DUMP("dec: ", i, buf, sizeof(buf));
 
 	//aes256_done(&ctx);
+
+	unsigned char hash[20];
+	char hexstring[41];
+	sha1::calc("Teststring", 10, hash); // 10 is the length of the string
 
 	try{
 		GraceDHT::dht dht("127.0.0.1", 9000);

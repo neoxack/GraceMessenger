@@ -86,6 +86,7 @@
     <ClInclude Include="cpplinq.hpp" />
     <ClInclude Include="crypto\aes256.h" />
     <ClInclude Include="crypto\crypto.h" />
+    <ClInclude Include="crypto\sha1.h" />
     <ClInclude Include="dht\constants.h" />
     <ClInclude Include="dht\dht.h" />
     <ClInclude Include="dht\messages\error.h" />
@@ -117,6 +118,7 @@
   <ItemGroup>
     <ClCompile Include="crypto\aes256.c" />
     <ClCompile Include="crypto\curve25519.h" />
+    <ClCompile Include="crypto\sha1.cpp" />
     <ClCompile Include="GraceMessenger.cpp" />
     <ClCompile Include="logger\Logger.cpp" />
   </ItemGroup>

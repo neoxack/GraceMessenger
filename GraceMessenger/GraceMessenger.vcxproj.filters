@@ -111,6 +111,9 @@
     <ClInclude Include="network\constants.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="crypto\sha1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GraceMessenger.cpp">
@@ -123,6 +126,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="logger\Logger.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="crypto\sha1.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
