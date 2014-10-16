@@ -10,6 +10,7 @@
 #include "../message.h"
 #include "messages/add_friend_message.h"
 #include "../contact_list.h"
+#include "../utils.h"
 
 
 namespace GraceMessenger
@@ -28,11 +29,10 @@ namespace GraceMessenger
 				_messenger(messenger),
 				_socket(std::move(socket)),
 				_network_service(network_service),
-				_message_handler(handler),
 				_user(user),
 				_contact_list(contact_list)
 			{
-				
+				_session_id = get_random64();
 			}
 
 
@@ -108,10 +108,9 @@ namespace GraceMessenger
 				});
 			}
 
-			
+			uint64_t _session_id;
 			messenger &_messenger;
 			network_service &_network_service;
-			message_handler &_message_handler;
 			user &_user;
 			contact_list &_contact_list;
 			message_parser _message_parser;

@@ -106,6 +106,7 @@
     <ClInclude Include="config.h" />
     <ClInclude Include="network\constants.h" />
     <ClInclude Include="network\messages\add_friend_message.h" />
+    <ClInclude Include="network\messages\crypted_message.h" />
     <ClInclude Include="network\messages\message_header.h" />
     <ClInclude Include="network\message_handler.h" />
     <ClInclude Include="network\message_parser.h" />
@@ -114,6 +115,7 @@
     <ClInclude Include="status.h" />
     <ClInclude Include="user.h" />
     <ClInclude Include="user_id.h" />
+    <ClInclude Include="utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="crypto\aes256.c" />
