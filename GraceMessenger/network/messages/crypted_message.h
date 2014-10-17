@@ -11,7 +11,7 @@ namespace GraceMessenger
 		class crypted_message
 		{
 
-		private:
+		public:
 			message_header header;
 			uint64_t msg_key;
 			char enc_data[MAX_MESSAGE_SIZE];

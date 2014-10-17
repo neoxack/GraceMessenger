@@ -105,6 +105,7 @@
     <ClInclude Include="messenger.h" />
     <ClInclude Include="config.h" />
     <ClInclude Include="network\constants.h" />
+    <ClInclude Include="network\crypto_service.h" />
     <ClInclude Include="network\messages\add_friend_message.h" />
     <ClInclude Include="network\messages\crypted_message.h" />
     <ClInclude Include="network\messages\message_header.h" />

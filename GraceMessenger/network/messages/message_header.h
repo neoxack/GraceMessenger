@@ -7,7 +7,8 @@ namespace GraceMessenger
 	{
 		typedef enum type
 		{
-			AddFriend = 0x6FF9
+			AddFriend = 0x6FF9,
+			Crypted = 0xBD95
 		} m_type;
 
 
