@@ -8,6 +8,7 @@ namespace GraceMessenger
 	namespace Network
 	{
 		
+        #pragma pack(1)
 		class crypted_message
 		{
 

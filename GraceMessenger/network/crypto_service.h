@@ -46,11 +46,32 @@ namespace GraceMessenger
 			}
 
 			template<typename T>
-			T decrypt(const crypted_message &crypted, const Crypto::shared_key &shared_key)
+			bool decrypt(const crypted_message &encrypted, const Crypto::shared_key &shared_key, T &decrypted)
 			{
-				T result;
+				size_t temp_size = (encrypted.header.size - sizeof(encrypted.header) - sizeof(encrypted.msg_key)) / 16;
+				size_t rounds = temp_size / 16;
+				size_t o = temp_size % 16;
+				if (o > 0) rounds++;
 
-				return result;
+				uint8_t aes_key[32];
+				generate_aes_key(shared_key, encrypted.msg_key, aes_key);
+
+				aes256_context ctx;
+				aes256_init(&ctx, aes_key);
+				for (size_t i = 0; i < rounds; i++)
+				{
+					uint8_t block[16];
+					memcpy(block, encrypted.enc_data + i * 16, 16);
+					aes256_decrypt_ecb(&ctx, block);
+					memcpy(&decrypted + i * 16, block, 16);
+				}
+				aes256_done(&ctx);
+
+				union msg_key key_union = { 0 };
+
+				sha1::calc(&decrypted, decrypted.header.size, key_union.sha1_hash);
+				if (key_union.key == encrypted.msg_key) return true;
+				return false;
 			}
 
 		private:
