@@ -19,7 +19,7 @@ namespace GraceMessenger
 		uint64_t _timestamp;
 		user *_author;
 		user *_recipient;
-		std::string _text;
+		std::wstring _text;
 	};
 
 }

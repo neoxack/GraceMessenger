@@ -60,7 +60,6 @@ int _tmain(int argc, _TCHAR* argv[])
 	//aes256_done(&ctx);
 
 	unsigned char hash[20];
-	char hexstring[41];
 	sha1::calc("Teststring", 10, hash); // 10 is the length of the string
 
 	try{

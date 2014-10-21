@@ -13,6 +13,7 @@ namespace GraceMessenger
 
 	
 		user_id _id;
+		std::wstring name;
 		asio::ip::tcp::endpoint _endpoint;
 		Crypto::shared_key _shared_key;
 	};
