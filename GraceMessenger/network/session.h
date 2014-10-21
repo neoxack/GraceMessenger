@@ -11,6 +11,7 @@
 #include "messages/add_friend_message.h"
 #include "../contact_list.h"
 #include "../utils.h"
+#include "crypto_service.h"
 
 
 namespace GraceMessenger
@@ -73,6 +74,28 @@ namespace GraceMessenger
 						add_friend_message message;
 						message.parse(data, header);
 						handle_add_friend_message(message);
+						break;
+					}
+					case Crypted:
+					{
+						crypted_message crypted_message;
+						crypted_message.parse(data, header);
+						std::array<uint8_t, MAX_MESSAGE_SIZE> decrypted_array;
+						crypto_service::decrypt(crypted_message, _user._shared_key, decrypted_array);
+
+						message_parser::result_type result;
+						message_header decrypted_header;
+						result = _message_parser.parse(decrypted_header, decrypted_array, header.size);
+
+						if (result == message_parser::good)
+						{
+							handle(decrypted_header, decrypted_array);
+						}
+						else if (result == message_parser::bad)
+						{
+							LOG(Error, "bad crypted message format");
+						}
+
 						break;
 					}
 				}

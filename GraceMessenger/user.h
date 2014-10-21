@@ -11,7 +11,7 @@ namespace GraceMessenger
 	{
 	public:
 
-	private:
+	
 		user_id _id;
 		asio::ip::tcp::endpoint _endpoint;
 		Crypto::shared_key _shared_key;

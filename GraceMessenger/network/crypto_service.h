@@ -15,7 +15,7 @@ namespace GraceMessenger
 		public:
 			
 			template<typename M>
-			crypted_message encrypt(const M &message, const Crypto::shared_key &shared_key)
+			static crypted_message encrypt(const M &message, const Crypto::shared_key &shared_key)
 			{
 				crypted_message result;
 				result.header.type = Crypted;
@@ -45,10 +45,9 @@ namespace GraceMessenger
 				return result;
 			}
 
-			template<typename T>
-			bool decrypt(const crypted_message &encrypted, const Crypto::shared_key &shared_key, T &decrypted)
+			static bool decrypt(const crypted_message &encrypted, const Crypto::shared_key &shared_key, std::array<uint8_t, MAX_MESSAGE_SIZE> &output)
 			{
-				size_t temp_size = (encrypted.header.size - sizeof(encrypted.header) - sizeof(encrypted.msg_key)) / 16;
+				size_t temp_size = (encrypted.header.size - sizeof(encrypted.header) - sizeof(encrypted.msg_key));
 				size_t rounds = temp_size / 16;
 				size_t o = temp_size % 16;
 				if (o > 0) rounds++;
@@ -63,20 +62,15 @@ namespace GraceMessenger
 					uint8_t block[16];
 					memcpy(block, encrypted.enc_data + i * 16, 16);
 					aes256_decrypt_ecb(&ctx, block);
-					memcpy(&decrypted + i * 16, block, 16);
+					memcpy(output.data() + i * 16, block, 16);
 				}
 				aes256_done(&ctx);
-
-				union msg_key key_union = { 0 };
-
-				sha1::calc(&decrypted, decrypted.header.size, key_union.sha1_hash);
-				if (key_union.key == encrypted.msg_key) return true;
-				return false;
+				return true;
 			}
 
 		private:
 
-			void generate_aes_key(const Crypto::shared_key &shared_key, uint64_t msg_key, uint8_t *aes_key)
+			static void generate_aes_key(const Crypto::shared_key &shared_key, uint64_t msg_key, uint8_t *aes_key)
 			{
 				uint8_t h1[24];
 				memcpy(h1, shared_key.data(), 16);
