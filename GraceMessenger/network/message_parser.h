@@ -13,12 +13,9 @@ namespace GraceMessenger
 		public:
 			enum result_type { good, bad, indeterminate };
 
-			message_parser()
-			{
+		
 
-			}
-
-			result_type parse(message_header &result, const std::array<uint8_t, MAX_MESSAGE_SIZE> &data, size_t length)
+			static result_type parse(message_header &result, const std::array<uint8_t, MAX_MESSAGE_SIZE> &data, size_t length)
 			{
 				if (length < sizeof(message_header)) return bad;
 				memcpy(&result, data.data(), sizeof(message_header));

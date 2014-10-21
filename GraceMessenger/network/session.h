@@ -85,7 +85,7 @@ namespace GraceMessenger
 
 						message_parser::result_type result;
 						message_header decrypted_header;
-						result = _message_parser.parse(decrypted_header, decrypted_array, header.size);
+						result = message_parser::parse(decrypted_header, decrypted_array, header.size);
 
 						if (result == message_parser::good)
 						{
@@ -105,13 +105,13 @@ namespace GraceMessenger
 			{
 				auto self(shared_from_this());
 				_socket.async_read_some(asio::buffer(_read_buffer),
-					[this, self](asio::error_code ec, std::size_t bytes_transferred)
+					[this, self](asio::error_code ec, size_t bytes_transferred)
 				{
 					if (!ec)
 					{
 						message_parser::result_type result;
 						message_header header;
-						result = _message_parser.parse(header, _read_buffer, bytes_transferred);
+						result = message_parser::parse(header, _read_buffer, bytes_transferred);
 
 						if (result == message_parser::good)
 						{
@@ -136,7 +136,6 @@ namespace GraceMessenger
 			network_service &_network_service;
 			user &_user;
 			contact_list &_contact_list;
-			message_parser _message_parser;
 			asio::ip::tcp::socket _socket;
 
 			enum { max_msg = 2048 };
