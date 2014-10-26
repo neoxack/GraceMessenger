@@ -72,19 +72,19 @@ namespace GraceMessenger
 
 			static void generate_aes_key(const Crypto::shared_key &shared_key, uint64_t msg_key, uint8_t *aes_key)
 			{
-				uint8_t h1[24];
+				uint8_t h1[24] = { 0 };
 				memcpy(h1, shared_key.data(), 16);
 				memcpy(h1 + 16, &msg_key, sizeof(msg_key));
 				uint8_t h1_hash[20];
 				sha1::calc(h1, 24, h1_hash);
 
-				uint8_t h2[24];
-				memcpy(h2, shared_key.data()+16, 16);
+				uint8_t h2[24] = { 0 };
+				memcpy(h2, shared_key.data() + 16, 16);
 				memcpy(h2 + 16, &msg_key, sizeof(msg_key));
 				uint8_t h2_hash[20];
 				sha1::calc(h2, 24, h2_hash);
-				memcpy(aes_key, h1, 16);
-				memcpy(aes_key+16, h2, 16);
+				memcpy(aes_key, h1, 16); //-V512
+				memcpy(aes_key + 16, h2, 16); //-V512
 			}
 
 			union msg_key
