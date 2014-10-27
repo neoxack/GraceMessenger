@@ -15,7 +15,7 @@ namespace GraceMessenger
 		class network_service
 		{
 		public:
-			status send_message(const GraceMessenger::message &mesage, const user &user)
+			status send_message(const GraceMessenger::message &mesage, const user_id &user_id)
 			{
 				return status();
 			}

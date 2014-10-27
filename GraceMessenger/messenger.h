@@ -25,10 +25,28 @@ namespace GraceMessenger
 		}
 		~messenger(){}
 
-		//TODO: implement
-		status send_message(const message &mes, const user &user)
+		status send_friend_request(const std::wstring &text, const user_id &user_id)
 		{
-			auto result =  _network_service->send_message(mes, user);
+			return status();
+		}
+
+		status add_friend(const user_id &user_id)
+		{
+			return status();
+		}
+
+		status delete_friend(const user_id &user_id)
+		{
+			return status();
+		}
+
+		//TODO: implement
+		status send_message(const std::wstring &text, const user_id &user_id)
+		{
+			message mes;
+			//TODO: Init message
+
+			auto result = _network_service->send_message(mes, user_id);
 			if (result.is_ok())
 			{
 				_callbacks.message_sent(&mes);
@@ -40,15 +58,15 @@ namespace GraceMessenger
 		}
 
 		
-		
-
 
 	private:
 		std::unique_ptr<GraceDHT::dht> _dht;
 		std::unique_ptr<Network::network_service> _network_service;
+		std::unique_ptr<contact_list> _contact_list;
+
 		callbacks _callbacks;
 		config _config;
-		contact_list _contact_list;
+		
 	};
 
 }
