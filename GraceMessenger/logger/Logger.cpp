@@ -1,7 +1,5 @@
 #include "Logger.h"
-#include <iostream>
 #include <chrono>
-#include <ctime>
 #include <iomanip>
 
 logger::logger(std::string filename)

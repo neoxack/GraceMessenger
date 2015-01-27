@@ -7,15 +7,22 @@
 namespace GraceMessenger
 {
 
-	class user
+	struct user
 	{
-	public:
+		user()
+		{
+			
+		}
 
-	
-		user_id _id;
+		user(const std::wstring &u_name):
+			name(u_name)
+		{
+			Crypto::generate_keypair(private_key.data(), id.data());
+		}
+
+		user_id id;
 		std::wstring name;
-		asio::ip::tcp::endpoint _endpoint;
-		Crypto::shared_key _shared_key;
+		Crypto::private_key private_key;
 	};
 
 }

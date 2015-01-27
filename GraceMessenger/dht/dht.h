@@ -31,7 +31,7 @@ namespace GraceDHT
 	{
 		
 	public:
-		dht(const std::string &ip_adr, unsigned short port)
+		dht(const std::string &ip_adr, unsigned short port, const node_id &id)
 		{
 			_state = Off;
 			address adr = address::from_string(ip_adr);
@@ -39,7 +39,7 @@ namespace GraceDHT
 			
 			_network_service = std::make_unique<network_service>(_io_service, endpoint, bind(&dht::handle, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 			_main_node.endpoint = endpoint;
-			fill_random_id(_main_node.id);
+			_main_node.id = id;
 			_routing_table = std::make_unique<routing_table>(_main_node, *_network_service.get());
 		}
 
@@ -83,15 +83,8 @@ namespace GraceDHT
 			return bootstrap(bootstrap_node, callback);
 		}
 
-		void find_node(const std::string &str_id, const find_node_callback &callback)
-		{
-			auto id = node_id_from_string(str_id);
-			find_node(id, callback);
-		}
-
 		void find_node(const node_id &id, const find_node_callback &callback)
 		{
-			node result;
 			auto fnode = _routing_table->find_node(id);
 			
 			if (fnode != nullptr)
@@ -155,10 +148,10 @@ namespace GraceDHT
 				if (find_node_message.ttl > 0)
 				{
 					auto closest_nodes = _routing_table->find_closest_nodes(find_node_message.find_id, ALPHA);
-					for (auto &node : closest_nodes)
+					for (auto &&c_node : closest_nodes)
 					{
 						Messages::find_node<Messages::Request> find_message(find_node_message.finder, find_node_message.find_id, find_node_message.header.transaction_id, find_node_message.ttl - 1);
-						send_message(find_message, node->endpoint);
+						send_message(find_message, c_node->endpoint);
 					}
 				}
 				_routing_table->ping(find_node_message.finder);

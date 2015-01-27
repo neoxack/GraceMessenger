@@ -5,7 +5,8 @@
 
 namespace GraceMessenger
 {
+	const size_t USER_ID_LENGTH = 32;
 
-	typedef std::array<uint8_t, 32> user_id;
+	typedef std::array<uint8_t, USER_ID_LENGTH> user_id;
 
 }

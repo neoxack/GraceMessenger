@@ -84,28 +84,13 @@
     <ClInclude Include="logger\Logger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="network\network_service.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="config.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="network\session.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="cpplinq.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="network\message_parser.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="network\messages\message_header.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="network\message_handler.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="network\messages\add_friend_message.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="network\constants.h">
@@ -117,13 +102,16 @@
     <ClInclude Include="utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="network\messages\crypted_message.h">
+    <ClInclude Include="network\messages\packets.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="network\crypto_service.h">
+    <ClInclude Include="network\network_service.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="network\messages\content_message.h">
+    <ClInclude Include="contact.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="friend_request.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

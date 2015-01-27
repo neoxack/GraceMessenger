@@ -9,10 +9,10 @@
 
 namespace GraceMessenger
 {
-	struct message
+	struct friend_request
 	{
 	public:
-		message(const user_id &user, const std::wstring &text):
+		friend_request(const user_id &user, const std::wstring &text) :
 			contact(user),
 			content(text),
 			input(false)
@@ -21,11 +21,11 @@ namespace GraceMessenger
 			timestamp = get_timestamp();
 		}
 
-		message(){};
+		friend_request(){};
 
-		bool operator==(const message& n) const
-		{ 
-			return (id == n.id); 
+		bool operator==(const friend_request& n) const
+		{
+			return (id == n.id);
 		}
 
 		uint32_t id;

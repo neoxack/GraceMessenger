@@ -10,18 +10,17 @@ namespace GraceMessenger
 	public:
 		bool is_ok()
 		{
-			return _code == ok;
+			return code == ok;
 		}
 
-	private:
 		enum status_code
 		{
 			ok,
 			error
 		};
 
-		int _code;
-		std::string _message;
+		int code;
+		std::string message;
 	};
 
 }

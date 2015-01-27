@@ -6,6 +6,6 @@
 
 namespace GraceDHT
 {
-	typedef std::array<uint32_t, ID_LENGTH/32> node_id;
+	typedef std::array<uint8_t, ID_LENGTH/8> node_id;
 }
 

@@ -9,9 +9,11 @@ namespace GraceMessenger
 {
 	namespace Crypto
 	{
-		typedef std::array<uint8_t, 32> shared_key;
-		typedef std::array<uint8_t, 32> private_key;
-		typedef std::array<uint8_t, 32> public_key;
+		const size_t KEY_LENGTH = 32;
+
+		typedef std::array<uint8_t, KEY_LENGTH> shared_key;
+		typedef std::array<uint8_t, KEY_LENGTH> private_key;
+		typedef std::array<uint8_t, KEY_LENGTH> public_key;
 
 		inline uint32_t get_random()
 		{
@@ -27,7 +29,7 @@ namespace GraceMessenger
 			for (size_t i = 0; i < 8; i++)
 			{
 				auto r = get_random();
-				*(uint32_t*)(private_key + i * sizeof(uint32_t)) = r;
+				*reinterpret_cast<uint32_t*>(private_key + i * sizeof(uint32_t)) = r;
 			}
 
 			private_key[0] &= 248;
@@ -39,7 +41,7 @@ namespace GraceMessenger
 			curve25519(public_key, private_key, basepoint);
 		}
 
-		inline void generate_sharedkey(uint8_t *shared_key, uint8_t *mysecret, uint8_t *theirpublic)
+		inline void generate_shared_key(uint8_t *shared_key, const uint8_t *mysecret, const uint8_t *theirpublic)
 		{
 			curve25519(shared_key, mysecret, theirpublic);
 		}

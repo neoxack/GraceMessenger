@@ -44,14 +44,14 @@ namespace GraceDHT
 	}
 
 	template <size_t SIZE>
-	inline int32_t bit_position(const std::array<uint32_t, SIZE> &arr1, const std::array<uint32_t, SIZE> &arr2)
+	inline int32_t bit_position(const std::array<uint8_t, SIZE> &arr1, const std::array<uint8_t, SIZE> &arr2)
 	{
 		for (size_t i = 0; i < SIZE; i++)
 		{
 			int32_t xor = arr1[i] ^ arr2[i];
 			if (xor != 0)
 			{
-				return (SIZE - i - 1)*32 + (log2(xor));
+				return (SIZE - i - 1)*8 + (log2(xor));
 			}
 			if (i == (SIZE-1)) return -1;
 		}
@@ -75,9 +75,9 @@ namespace GraceDHT
 
 	inline void fill_random_id(node_id& id)
 	{
-		for (uint32_t &n : id)
+		for (size_t i = 0; i < id.size(); i += sizeof(uint32_t))
 		{
-			n = get_random();
+			*reinterpret_cast<uint32_t*>(id.data()+i) = get_random();
 		}
 	}
 
