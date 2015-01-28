@@ -100,7 +100,7 @@ namespace GraceDHT
 			}
 			else
 				bootstrap_node.endpoint = udp::endpoint(adr, port);
-			bootstrap_node.id = node_id_from_string(str_id);
+			bootstrap_node.id = id_from_string(str_id);
 			return bootstrap(bootstrap_node, callback);
 		}
 
@@ -131,7 +131,7 @@ namespace GraceDHT
 
 		std::string get_node_id() const
 		{
-			return node_id_to_string(_main_node.id);
+			return id_to_string(_main_node.id);
 		}
 
 		const node* get_node() const

@@ -83,25 +83,6 @@ namespace GraceDHT
 		}
 	}
 
-	inline std::string node_id_to_string(const node_id &id)
-	{
-		std::stringstream result;
-
-		for (size_t i = 0; i < id.size(); i++)
-		{
-			result << std::hex << id[i];
-			if (i != id.size() - 1) result << "-";
-		}
-		return result.str();
-	}
-
-	inline node_id node_id_from_string(const std::string &id)
-	{
-		node_id result;
-		sscanf_s(id.c_str(), "%x-%x-%x-%x-%x-%x-%x-%x", &result[0], &result[1], &result[2], &result[3], &result[4], &result[5], &result[6], &result[7]);
-		return result;
-	}
-
 	inline std::vector<std::string> &split(const std::string &s, char delim, std::vector<std::string> &elems) 
 	{
 		std::stringstream ss(s);
