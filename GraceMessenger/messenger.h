@@ -27,8 +27,20 @@ namespace GraceMessenger
 			_callbacks(callbacks),
 			_config(config)
 		{
-			asio::ip::address adr = asio::ip::address::from_string(config.ip_adress);
-			asio::ip::udp::endpoint endpoint = asio::ip::udp::endpoint(adr, config.dht_port+1);
+			asio::error_code ec;
+			asio::ip::udp::endpoint endpoint;
+			asio::ip::address adr = asio::ip::address::from_string(config.ip_adress, ec);
+			if (ec.value() != 0)
+			{
+				asio::ip::tcp::resolver resolver(_io_service);
+				asio::ip::tcp::resolver::query query(asio::ip::tcp::v4(), config.ip_adress, "");
+				asio::ip::tcp::resolver::iterator iter = resolver.resolve(query);
+				asio::ip::tcp::endpoint ep = *iter;
+				endpoint = asio::ip::udp::endpoint(ep.address(), config.dht_port + 1);
+			}
+			else
+				endpoint = asio::ip::udp::endpoint(adr, config.dht_port + 1);
+
 			_network_service = std::make_unique<Network::network_service>(_io_service, endpoint, bind(&messenger::handle_packets, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 			_network_service->start();
 		}

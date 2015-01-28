@@ -34,8 +34,19 @@ namespace GraceDHT
 		dht(const std::string &ip_adr, unsigned short port, const node_id &id)
 		{
 			_state = Off;
-			address adr = address::from_string(ip_adr);
-			udp::endpoint endpoint = udp::endpoint(adr, port);
+			asio::error_code ec;
+			udp::endpoint endpoint;
+			address adr = address::from_string(ip_adr, ec);
+			if (ec.value() != 0)
+			{
+				tcp::resolver resolver(_io_service);
+				tcp::resolver::query query(tcp::v4(), ip_adr, "");
+				tcp::resolver::iterator iter = resolver.resolve(query);
+				tcp::endpoint ep = *iter;
+				endpoint = udp::endpoint(ep.address(), port);
+			}
+			else
+				endpoint = udp::endpoint(adr, port);
 			
 			_network_service = std::make_unique<network_service>(_io_service, endpoint, bind(&dht::handle, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
 			_main_node.endpoint = endpoint;
@@ -77,9 +88,19 @@ namespace GraceDHT
 		bool bootstrap(const std::string &str_id, const std::string &ip_adr, unsigned short port, const bootstrap_callback &callback)
 		{
 			node bootstrap_node;
-			address adr = address::from_string(ip_adr);
+			asio::error_code ec;
+			address adr = address::from_string(ip_adr, ec);
+			if (ec.value()!=0)
+			{
+				tcp::resolver resolver(_io_service);
+				tcp::resolver::query query(tcp::v4(), ip_adr, "");
+				tcp::resolver::iterator iter = resolver.resolve(query);
+				tcp::endpoint ep = *iter;
+				bootstrap_node.endpoint = udp::endpoint(ep.address(), port);
+			}
+			else
+				bootstrap_node.endpoint = udp::endpoint(adr, port);
 			bootstrap_node.id = node_id_from_string(str_id);
-			bootstrap_node.endpoint = udp::endpoint(adr, port);
 			return bootstrap(bootstrap_node, callback);
 		}
 
@@ -182,7 +203,7 @@ namespace GraceDHT
 		void handle(const udp::endpoint & endpoint, const std::array<char, BUF_SIZE> & buffer, size_t bytes_recvd)
 		{
 			using namespace Messages;
-			std::cout << "handle() " << _main_node.endpoint.port() << " <- " << endpoint.port() << ", bytes received: " << bytes_recvd;
+			std::cout << std::endl << "handle() " << _main_node.endpoint.port() << " <- " << endpoint.port() << ", bytes received: " << bytes_recvd;
 			message_header header;
 			header.parse(buffer.data());
 			node n;

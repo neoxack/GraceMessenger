@@ -4,6 +4,8 @@
 #include <random>
 #include <chrono>
 
+#include "node_id.h"
+
 namespace GraceDHT
 {
 	inline int32_t log2(int32_t i)

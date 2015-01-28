@@ -82,6 +82,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="callbacks.h" />
+    <ClInclude Include="config_loader.h" />
     <ClInclude Include="contact_list.h" />
     <ClInclude Include="cpplinq.hpp" />
     <ClInclude Include="crypto\aes256.h" />
@@ -100,6 +101,7 @@
     <ClInclude Include="dht\routing_table.h" />
     <ClInclude Include="dht\utils.h" />
     <ClInclude Include="friend_request.h" />
+    <ClInclude Include="json11.hpp" />
     <ClInclude Include="logger\log.h" />
     <ClInclude Include="logger\Logger.h" />
     <ClInclude Include="message.h" />
@@ -120,6 +122,7 @@
     <ClCompile Include="crypto\curve25519.h" />
     <ClCompile Include="crypto\sha1.cpp" />
     <ClCompile Include="GraceMessenger.cpp" />
+    <ClCompile Include="json11.cpp" />
     <ClCompile Include="logger\Logger.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

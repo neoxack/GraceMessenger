@@ -3,7 +3,7 @@
 
 #include "messenger.h"
 #include "logger/log.h"
-
+#include "config_loader.h"
 
 
 void dht_bootstrapped(bool success, int error)
@@ -26,7 +26,8 @@ void message_received(const GraceMessenger::message *mes)
 
 void message_send_error(const GraceMessenger::message *mes, const GraceMessenger::status* status)
 {
-	
+	std::cout << "message send error: ";
+	std::cout << status->message << std::endl;
 }
 
 
@@ -37,7 +38,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		using namespace GraceMessenger;
 
 		user dht_user = user(L"DHT");
-		GraceDHT::dht dht("127.0.0.1", 6000, dht_user.id);
+		GraceDHT::dht dht("localhost", 6000, dht_user.id);
 		dht.start();
 
 		callbacks callbacks;
@@ -56,11 +57,11 @@ int _tmain(int argc, _TCHAR* argv[])
 		
 		config config2;
 		config2.dht_port = 5566;
-		config2.ip_adress = "127.0.0.1";
+		config2.ip_adress = "localhost";
 		config2.user = user(L"Boris");
 		messenger messenger2(config2, callbacks);
 		messenger2.start_dht();
-		messenger2.dht_bootstrap(dht.get_node_id(), "127.0.0.1", 6000);
+		messenger2.dht_bootstrap(dht.get_node_id(), "localhost", 6000);
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 		
@@ -68,6 +69,10 @@ int _tmain(int argc, _TCHAR* argv[])
 		messenger1.send_message(m);
 		message m2(config1.user.id, L"Hello from Boris");
 		messenger2.send_message(m2);
+
+		//config_loader::save_config(config2, L"config2.json");
+		//config from_file = config_loader::load_config(L"config2.json");
+
 
 		_getch();
 	}

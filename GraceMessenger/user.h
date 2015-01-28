@@ -3,6 +3,7 @@
 #include "user_id.h"
 #include <asio/ip/tcp.hpp>
 #include "crypto/crypto.h"
+#include "dht/utils.h"
 
 namespace GraceMessenger
 {
