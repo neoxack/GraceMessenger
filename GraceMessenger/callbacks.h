@@ -10,6 +10,8 @@ namespace GraceMessenger
 
 	typedef struct callbacks
 	{
+		std::function<void(bool success, int error)> dht_bootstrapped;
+
 		std::function<void(const message *mes)> message_sent;
 		std::function<void(const message *mes)> message_received;
 		std::function<void(const message *mes)> message_delivered;

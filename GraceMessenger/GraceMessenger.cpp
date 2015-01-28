@@ -1,23 +1,75 @@
 #include <tchar.h>
+#include <conio.h>
+
 #include "messenger.h"
 #include "logger/log.h"
+
+
+
+void dht_bootstrapped(bool success, int error)
+{
+	success ? std::cout << "---dht bootstrap success---" << std::endl : 
+			  std::cout << "---dht bootstrap failed---" << std::endl;
+}
+
+void message_sent(const GraceMessenger::message *mes)
+{
+	std::cout << "sent message: ";
+	std::wcout << mes->content << std::endl;
+}
+
+void message_received(const GraceMessenger::message *mes)
+{
+	std::cout << "recv message: ";
+	std::wcout << mes->content << std::endl;
+}
+
+void message_send_error(const GraceMessenger::message *mes, const GraceMessenger::status* status)
+{
+	
+}
 
 
 int _tmain(int argc, _TCHAR* argv[])
 {
 	try
 	{
+		using namespace GraceMessenger;
+
+		user dht_user = user(L"DHT");
+		GraceDHT::dht dht("127.0.0.1", 6000, dht_user.id);
+		dht.start();
+
+		callbacks callbacks;
+		callbacks.dht_bootstrapped = dht_bootstrapped;
+		callbacks.message_sent = message_sent;
+		callbacks.message_received = message_received;
+		callbacks.message_send_error = message_send_error;
+
+		config config1;
+		config1.dht_port = 5555;
+		config1.ip_adress = "127.0.0.1";
+		config1.user = user(L"Semyon");
+		messenger messenger1(config1, callbacks);
+		messenger1.start_dht();
+		messenger1.dht_bootstrap(dht.get_node_id(), "127.0.0.1", 6000);
 		
-		GraceMessenger::callbacks callbacks;
-		GraceMessenger::config config;
-		config.dht_port = 5555;
-		config.messenger_port = 5566;
-		config.ip_adress = "127.0.0.1";
-		config.user = GraceMessenger::user(L"Semyon");
-		GraceMessenger::messenger messenger(config, callbacks);
-		messenger.start_dht();
+		config config2;
+		config2.dht_port = 5566;
+		config2.ip_adress = "127.0.0.1";
+		config2.user = user(L"Boris");
+		messenger messenger2(config2, callbacks);
+		messenger2.start_dht();
+		messenger2.dht_bootstrap(dht.get_node_id(), "127.0.0.1", 6000);
 
+		std::this_thread::sleep_for(std::chrono::milliseconds(2000));
+		
+		message m(config2.user.id, L"Hello from Semyon");
+		messenger1.send_message(m);
+		message m2(config1.user.id, L"Hello from Boris");
+		messenger2.send_message(m2);
 
+		_getch();
 	}
 	catch (std::exception e)
 	{

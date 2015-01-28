@@ -27,7 +27,10 @@ namespace GraceMessenger
 			_callbacks(callbacks),
 			_config(config)
 		{
-			
+			asio::ip::address adr = asio::ip::address::from_string(config.ip_adress);
+			asio::ip::udp::endpoint endpoint = asio::ip::udp::endpoint(adr, config.dht_port+1);
+			_network_service = std::make_unique<Network::network_service>(_io_service, endpoint, bind(&messenger::handle_packets, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+			_network_service->start();
 		}
 		~messenger(){}
 
@@ -35,6 +38,11 @@ namespace GraceMessenger
 		{
 			_dht = std::make_unique<GraceDHT::dht>(_config.ip_adress, _config.dht_port, _config.user.id);
 			return _dht->start();
+		}
+
+		bool dht_bootstrap(const std::string &str_id, const std::string &ip_adr, unsigned short port)
+		{
+			return _dht->bootstrap(str_id, ip_adr, port, _callbacks.dht_bootstrapped);
 		}
 
 		status online()
@@ -75,7 +83,7 @@ namespace GraceMessenger
 			{
 				if (success)
 				{
-					asio::ip::udp::endpoint endpoint(result->endpoint.address(), _config.messenger_port);
+					asio::ip::udp::endpoint endpoint(result->endpoint.address(), result->endpoint.port()+1);
 					_network_service->send(crypted_pack, endpoint);
 					_callbacks.message_sent(&m);
 				}				
@@ -108,7 +116,7 @@ namespace GraceMessenger
 			{
 				if (success)
 				{
-					asio::ip::udp::endpoint endpoint(result->endpoint.address(), _config.messenger_port);
+					asio::ip::udp::endpoint endpoint(result->endpoint.address(), result->endpoint.port() + 1);
 					_network_service->send(crypted_pack, endpoint);
 					_callbacks.friend_request_sended(&request);
 				}
@@ -279,6 +287,7 @@ namespace GraceMessenger
 			});
 		}
 
+		asio::io_service _io_service;
 		std::unique_ptr<GraceDHT::dht> _dht;
 		std::unique_ptr<Network::network_service> _network_service;
 		std::list<contact> _contact_list;

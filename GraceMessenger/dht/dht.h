@@ -196,7 +196,7 @@ namespace GraceDHT
 					ping<true> ping_message;
 					ping_message.parse(buffer, header);
 					handle_ping_request(ping_message, endpoint);
-					std::cout << " [ ping ]";
+				//	std::cout << " [ ping ]";
 					break;
 				}
 				case PING_RESPONSE:
@@ -204,7 +204,7 @@ namespace GraceDHT
 					ping<false> ping_message;
 					ping_message.parse(buffer, header);
 					_sent_messages.erase(header.transaction_id);
-					std::cout << " [ pong ]";
+				//	std::cout << " [ pong ]";
 					break;
 				}
 				case FIND_NODE_REQUEST:
@@ -212,7 +212,7 @@ namespace GraceDHT
 					Messages::find_node<Request> find_node_message;
 					find_node_message.parse(buffer, header);
 					handle_find_node_request(find_node_message, endpoint);
-					std::cout << " [ find request ]";
+				//	std::cout << " [ find request ]";
 					break;
 				}
 				case FIND_NODE_RESPONSE:
@@ -221,7 +221,7 @@ namespace GraceDHT
 					find_node_message.parse(buffer, header);
 					handle_find_node_response(find_node_message, endpoint);
 					_sent_messages.erase(header.transaction_id);
-					std::cout << " [ find response ]";
+				//	std::cout << " [ find response ]";
 					break;
 				}
 			}
