@@ -39,10 +39,10 @@ namespace GraceDHT
 			address adr = address::from_string(ip_adr, ec);
 			if (ec.value() != 0)
 			{
-				tcp::resolver resolver(_io_service);
-				tcp::resolver::query query(tcp::v4(), ip_adr, "");
-				tcp::resolver::iterator iter = resolver.resolve(query);
-				tcp::endpoint ep = *iter;
+				udp::resolver resolver(_io_service);
+				udp::resolver::query query(udp::v4(), ip_adr, "");
+				udp::resolver::iterator iter = resolver.resolve(query);
+				udp::endpoint ep = *iter;
 				endpoint = udp::endpoint(ep.address(), port);
 			}
 			else
@@ -92,10 +92,10 @@ namespace GraceDHT
 			address adr = address::from_string(ip_adr, ec);
 			if (ec.value()!=0)
 			{
-				tcp::resolver resolver(_io_service);
-				tcp::resolver::query query(tcp::v4(), ip_adr, "");
-				tcp::resolver::iterator iter = resolver.resolve(query);
-				tcp::endpoint ep = *iter;
+				udp::resolver resolver(_io_service);
+				udp::resolver::query query(udp::v4(), ip_adr, "");
+				udp::resolver::iterator iter = resolver.resolve(query);
+				udp::endpoint ep = *iter;
 				bootstrap_node.endpoint = udp::endpoint(ep.address(), port);
 			}
 			else
