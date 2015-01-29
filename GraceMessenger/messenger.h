@@ -43,14 +43,14 @@ namespace GraceMessenger
 				endpoint = udp::endpoint(adr, config.dht_port + 1);
 
 			_network_service = std::make_unique<Network::network_service>(_io_service, endpoint, bind(&messenger::handle_packets, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-			_network_service->start();
 		}
-		~messenger(){}
+		~messenger()
+		{
+		}
 
-		bool start_dht()
+		void start_dht()
 		{
 			_dht = std::make_unique<GraceDHT::dht>(_config.ip_adress, _config.dht_port, _config.user.id);
-			return _dht->start();
 		}
 
 		bool dht_bootstrap(const std::string &str_id, const std::string &ip_adr, unsigned short port)
@@ -80,7 +80,7 @@ namespace GraceMessenger
 
 		void send_message(const message &m)
 		{
-			_messages.emplace(m.id, m);
+			//_messages.emplace(m.id, m);
 
 			using namespace Network;
 			using namespace Crypto;
@@ -239,7 +239,7 @@ namespace GraceMessenger
 					m.content = std::wstring(simple_text_message_pack->text, simple_text_message_pack->text_length);
 					m.input = true;
 					m.timestamp = get_timestamp();
-					_messages.emplace(m.id, m);
+					//_messages.emplace(m.id, m);
 					_callbacks.message_received(&m);
 					break;
 				}
@@ -304,7 +304,7 @@ namespace GraceMessenger
 		std::unique_ptr<GraceDHT::dht> _dht;
 		std::unique_ptr<Network::network_service> _network_service;
 		std::list<contact> _contact_list;
-		std::unordered_map<uint32_t, message> _messages;
+		//std::unordered_map<uint32_t, message> _messages;
 		std::unordered_map<uint32_t, friend_request> _friend_requests;
 		network_status _network_status;
 		

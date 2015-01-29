@@ -47,24 +47,14 @@ namespace GraceDHT
 			}
 			else
 				endpoint = udp::endpoint(adr, port);
-			
-			_network_service = std::make_unique<network_service>(_io_service, endpoint, bind(&dht::handle, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+				
 			_main_node.endpoint = endpoint;
-			_main_node.id = id;
-			_routing_table = std::make_unique<routing_table>(_main_node, *_network_service.get());
+			_main_node.id = id;		
+
+			start();
 		}
 
-		bool start()
-		{
-			if (_state == Off)
-			{
-				_network_service->start();
-				
-				_state = Started;
-				return true;
-			}
-			return false;
-		}
+		
 
 		bool is_connected() const
 		{
@@ -139,9 +129,24 @@ namespace GraceDHT
 			return &_main_node;
 		}
 
-		~dht(){};
+		~dht()
+		{
+			_state = Off;
+		};
 
 	private:
+
+		bool start()
+		{
+			if (_state == Off)
+			{
+				_network_service = std::make_unique<network_service>(_io_service, _main_node.endpoint, bind(&dht::handle, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+				_routing_table = std::make_unique<routing_table>(_main_node, *_network_service.get());
+				_state = Started;
+				return true;
+			}
+			return false;
+		}
 
 		void handle_ping_request(const Messages::ping<true> &ping_message, const udp::endpoint &endpoint)
 		{
@@ -266,7 +271,7 @@ namespace GraceDHT
 		{
 			std::thread([this, interval]()
 			{
-				while (true)
+				while (_state == Started)
 				{
 					std::this_thread::sleep_for(std::chrono::milliseconds(interval));
 					_network_service->async_run(std::bind(&dht::periodic_task, this));

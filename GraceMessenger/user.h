@@ -8,8 +8,9 @@
 namespace GraceMessenger
 {
 
-	struct user
+	class user
 	{
+	public:
 		user()
 		{
 			

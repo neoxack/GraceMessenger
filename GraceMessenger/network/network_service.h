@@ -26,24 +26,10 @@ namespace GraceMessenger
 				_my_endpoint(endpoint)
 			{
 				_socket.set_option(asio::ip::udp::socket::reuse_address(true));
+				start();
 			}
 
-			void start()
-			{
-				_is_started = true;
-				recv();
-				std::thread([this]()
-				{
-					_io_service.run();
-				}).detach();
-			}
-
-			void stop()
-			{
-				_is_started = false;
-				_socket.close();
-				LOG(Info, "");
-			}
+			
 
 			void send(const crypted_packet &message, const asio::ip::udp::endpoint &endpoint)
 			{
@@ -61,7 +47,30 @@ namespace GraceMessenger
 				_io_service.post(func);
 			}
 
+			~network_service()
+			{
+				stop();
+			}
+
 		private:
+			void start()
+			{
+				
+				recv();
+				std::thread([this]()
+				{
+					_io_service.run();
+				}).detach();
+				_is_started = true;
+			}
+
+			void stop()
+			{
+				_io_service.stop();
+				_is_started = false;
+				_socket.close();
+				LOG(Info, "");
+			}
 
 			void handle_send(const asio::error_code& error, size_t bytes_sent)
 			{

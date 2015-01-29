@@ -2,7 +2,7 @@
 #include <conio.h>
 
 #include "messenger.h"
-#include "logger/log.h"
+//#include "logger/log.h"
 #include "config_loader.h"
 
 
@@ -39,7 +39,6 @@ int _tmain(int argc, _TCHAR* argv[])
 
 		user dht_user = user(L"DHT");
 		GraceDHT::dht dht("localhost", 6000, dht_user.id);
-		dht.start();
 
 		callbacks callbacks;
 		callbacks.dht_bootstrapped = dht_bootstrapped;
@@ -54,6 +53,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		messenger messenger1(config1, callbacks);
 		messenger1.start_dht();
 		messenger1.dht_bootstrap(dht.get_node_id(), "127.0.0.1", 6000);
+
 		
 		config config2;
 		config2.dht_port = 5566;
@@ -75,6 +75,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 
 		_getch();
+		
 	}
 	catch (std::exception e)
 	{

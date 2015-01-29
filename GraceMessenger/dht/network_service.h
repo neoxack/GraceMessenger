@@ -19,22 +19,14 @@ namespace GraceDHT
 			_my_endpoint(endpoint)
 		{
 			_socket.set_option(asio::ip::udp::socket::reuse_address(true));
+			start();
 		}
 
-		void start()
-		{
-			_is_started = true;
-			recv();
-			std::thread([this]() 
-			{
-				_io_service.run();
-			}).detach();		
-		}
+		
 
-		void stop()
+		~network_service()
 		{
-			_is_started = false;
-			_socket.close();
+			stop();
 		}
 
 		template<typename Message>
@@ -51,10 +43,29 @@ namespace GraceDHT
 
 		void async_run(std::function<void(void)> func)
 		{
-			_io_service.post(func);
+			if (_is_started)
+				_io_service.post(func);
 		}
 			
 	private:
+
+		void start()
+		{
+			
+			recv();
+			std::thread([this]()
+			{
+				_io_service.run();
+			}).detach();
+			_is_started = true;
+		}
+
+		void stop()
+		{
+			_io_service.stop();
+			_is_started = false;
+			_socket.close();
+		}
 
 		void handle_send(const asio::error_code& error, size_t bytes_sent)
 		{
