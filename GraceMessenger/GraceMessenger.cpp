@@ -51,7 +51,6 @@ int _tmain(int argc, _TCHAR* argv[])
 		config1.ip_adress = "127.0.0.1";
 		config1.user = user(L"Semyon");
 		messenger messenger1(config1, callbacks);
-		messenger1.start_dht();
 		messenger1.dht_bootstrap(dht.get_node_id(), "127.0.0.1", 6000);
 
 		
@@ -60,7 +59,6 @@ int _tmain(int argc, _TCHAR* argv[])
 		config2.ip_adress = "localhost";
 		config2.user = user(L"Boris");
 		messenger messenger2(config2, callbacks);
-		messenger2.start_dht();
 		messenger2.dht_bootstrap(dht.get_node_id(), "localhost", 6000);
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(2000));

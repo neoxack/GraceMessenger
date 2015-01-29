@@ -43,13 +43,6 @@ namespace GraceMessenger
 				endpoint = udp::endpoint(adr, config.dht_port + 1);
 
 			_network_service = std::make_unique<Network::network_service>(_io_service, endpoint, bind(&messenger::handle_packets, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-		}
-		~messenger()
-		{
-		}
-
-		void start_dht()
-		{
 			_dht = std::make_unique<GraceDHT::dht>(_config.ip_adress, _config.dht_port, _config.user.id);
 		}
 
