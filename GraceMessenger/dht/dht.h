@@ -271,7 +271,7 @@ namespace GraceDHT
 		{
 			std::thread([this, interval]()
 			{
-				while (_state == Started)
+				while (_state != Off)
 				{
 					std::this_thread::sleep_for(std::chrono::milliseconds(interval));
 					_network_service->async_run(std::bind(&dht::periodic_task, this));
