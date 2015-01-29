@@ -14,12 +14,11 @@ namespace GraceDHT
 			ERROR_204 = 0x204
 		};
 
-#pragma pack(1)
-		struct error
+		#pragma pack(1)
+		typedef struct
 		{
 			uint32_t code;
-		};
+		} error;
 
-		typedef struct error error;
 	}
 }

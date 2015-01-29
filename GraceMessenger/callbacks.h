@@ -8,7 +8,7 @@ namespace GraceMessenger
 {
 	struct friend_request;
 
-	typedef struct callbacks
+	typedef struct
 	{
 		std::function<void(bool success, int error)> dht_bootstrapped;
 

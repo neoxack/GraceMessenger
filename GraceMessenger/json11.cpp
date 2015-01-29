@@ -26,7 +26,7 @@
 #include <limits>
 
 #ifdef _MSC_VER
-#define snprintf _snprintf
+#define snprintf _snprintf_s
 #endif
 
 namespace json11 {

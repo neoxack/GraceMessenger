@@ -6,12 +6,10 @@
 namespace GraceDHT
 {
     #pragma pack(1)
-	struct node
+	typedef struct 
 	{
 		node_id id;
 		asio::ip::udp::endpoint endpoint;
-	};
-
-	typedef struct node node;
+	} node;
 }
 

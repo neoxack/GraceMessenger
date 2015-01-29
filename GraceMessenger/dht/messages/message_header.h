@@ -19,8 +19,9 @@ namespace GraceDHT
 		} m_type;
 
 		#pragma pack(1)
-		struct message_header
+		class message_header
 		{
+		public:
 			uint16_t type;
 			uint32_t transaction_id;
 			node_id sender_id;
@@ -39,7 +40,7 @@ namespace GraceDHT
 			{
 			}
 
-			message_header() :sender_id({}), transaction_id(0), size(0), random(0), timestamp(0), type(0)
+			message_header() :type(0), transaction_id(0), sender_id({}), size(0), random(0), timestamp(0)
 			{}
 
 			void parse(const char* const data)
@@ -48,6 +49,5 @@ namespace GraceDHT
 			}
 		};
 
-		typedef struct message_header message_header;
 	}
 }

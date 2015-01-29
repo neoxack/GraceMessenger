@@ -13,14 +13,14 @@ namespace GraceMessenger
 		const size_t MAX_CRYPTED_DATA_LENGTH = 32 * 1024;
 
 		#pragma pack(1)
-		typedef struct header
+		typedef struct
 		{
 			uint16_t size;
 			uint8_t sender[USER_ID_LENGTH];
 		} header;
 
 		#pragma pack(1)
-		typedef struct data_packet_header
+		typedef struct
 		{
 			uint16_t size;
 			uint16_t type;
@@ -38,8 +38,9 @@ namespace GraceMessenger
 		};
 
 		#pragma pack(1)
-		typedef struct crypted_packet
+		class crypted_packet
 		{
+		public:
 			header header;
 			uint8_t crypted_data[MAX_CRYPTED_DATA_LENGTH];
 
@@ -105,14 +106,15 @@ namespace GraceMessenger
 				header.size = sizeof(header) + rounds * 16;
 			}
 
-		} crypted_packet;
+		};
 
 
 		//-------------DATA PACKETS----------------
 
 		#pragma pack(1)
-		typedef struct change_status_packet
+		class change_status_packet
 		{
+		public:
 			data_packet_header header;
 			uint16_t status;
 
@@ -124,11 +126,12 @@ namespace GraceMessenger
 				header.size = data_packet_header_size + sizeof(status);
 			}
 
-		} change_status_packet;
+		};
 
 		#pragma pack(1)
-		typedef struct friend_request_packet
+		class friend_request_packet
 		{
+		public:
 			data_packet_header header;
 			uint16_t text_length;
 			uint32_t req_num;
@@ -144,11 +147,12 @@ namespace GraceMessenger
 				memcpy(text, msg_text.c_str(), text_length * sizeof(wchar_t));
 			}
 
-		} friend_request_packet;
+		};
 
 		#pragma pack(1)
-		typedef struct add_friend_packet
+		class add_friend_packet
 		{
+		public:
 			data_packet_header header;
 			uint32_t req_num;
 
@@ -160,11 +164,12 @@ namespace GraceMessenger
 				header.size = data_packet_header_size + sizeof(req_num);
 			}
 
-		} add_friend_packet;
+		};
 
 		#pragma pack(1)
-		typedef struct delete_friend_packet
+		class delete_friend_packet
 		{
+		public:
 			data_packet_header header;
 			uint32_t req_num;
 
@@ -176,12 +181,13 @@ namespace GraceMessenger
 				header.size = data_packet_header_size + sizeof(req_num);
 			}
 
-		} delete_friend_packet;
+		};
 
 
 		#pragma pack(1)
-		typedef struct simple_text_message_packet
+		class simple_text_message_packet
 		{
+		public:
 			data_packet_header header;
 			uint32_t id;
 			uint16_t text_length;
@@ -197,11 +203,12 @@ namespace GraceMessenger
 				memcpy(text, msg_text.c_str(), text_length * sizeof(wchar_t));
 			}
 
-		} simple_text_message_packet;
+		};
 
 		#pragma pack(1)
-		typedef struct ping_packet
+		class ping_packet
 		{
+		public:
 			data_packet_header header;
 
 			ping_packet()
@@ -210,11 +217,12 @@ namespace GraceMessenger
 				header.size = sizeof(data_packet_header);
 			}
 
-		} ping_packet;
+		};
 
 		#pragma pack(1)
-		typedef struct pong_packet
+		class pong_packet
 		{
+		public:
 			data_packet_header header;
 
 			pong_packet()
@@ -223,7 +231,7 @@ namespace GraceMessenger
 				header.size = sizeof(data_packet_header);
 			}
 
-		} pong_packet;
+		};
 
 	}
 }
