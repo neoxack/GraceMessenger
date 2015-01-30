@@ -31,22 +31,16 @@ namespace GraceDHT
 	{
 		
 	public:
+
+		dht(const dht&) = delete;
+		dht& operator=(const dht&) = delete;
+
 		dht(const std::string &ip_adr, unsigned short port, const node_id &id)
 		{
 			_state = Off;
-			asio::error_code ec;
 			udp::endpoint endpoint;
-			address adr = address::from_string(ip_adr, ec);
-			if (ec.value() != 0)
-			{
-				udp::resolver resolver(_io_service);
-				udp::resolver::query query(udp::v4(), ip_adr, "");
-				udp::resolver::iterator iter = resolver.resolve(query);
-				udp::endpoint ep = *iter;
-				endpoint = udp::endpoint(ep.address(), port);
-			}
-			else
-				endpoint = udp::endpoint(adr, port);
+			address adr = address::from_string(ip_adr);
+			endpoint = udp::endpoint(adr, port);
 				
 			_main_node.endpoint = endpoint;
 			_main_node.id = id;		
@@ -54,7 +48,6 @@ namespace GraceDHT
 			start();
 		}
 
-		
 
 		bool is_connected() const
 		{
@@ -119,15 +112,6 @@ namespace GraceDHT
 			return _routing_table->get_nodes_count();
 		}
 
-		std::string get_node_id() const
-		{
-			return id_to_string(_main_node.id);
-		}
-
-		const node* get_node() const
-		{
-			return &_main_node;
-		}
 
 		~dht()
 		{

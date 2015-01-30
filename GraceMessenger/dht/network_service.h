@@ -12,6 +12,10 @@ namespace GraceDHT
 	class network_service
 	{
 	public:
+
+		network_service(const network_service&) = delete;
+		network_service& operator=(const network_service&) = delete;
+
 		network_service(asio::io_service& io_service, const asio::ip::udp::endpoint &endpoint, handler h) :
 			_io_service(io_service),
 			_handler(h),

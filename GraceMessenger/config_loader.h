@@ -19,7 +19,6 @@ namespace GraceMessenger
 		{
 			using namespace json11;
 			Json obj = Json::object({
-				{ "ip_address", config.ip_adress },
 				{ "dht_port", config.dht_port },
 				{ "user", Json::object({
 					{ "id", id_to_string(config.user.id) },
@@ -42,7 +41,6 @@ namespace GraceMessenger
 			config conf;
 			std::string err;
 			auto json = Json::parse(dump, err);
-			conf.ip_adress = json["ip_address"].string_value();
 			conf.dht_port = json["dht_port"].int_value();
 			conf.user.id = id_from_string(json["user"]["id"].string_value());
 			conf.user.private_key = id_from_string(json["user"]["private_key"].string_value());

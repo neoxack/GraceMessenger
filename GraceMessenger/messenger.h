@@ -23,27 +23,21 @@ namespace GraceMessenger
 	{
 	public:
 
+		messenger(const messenger&) = delete;
+		messenger& operator=(const messenger&) = delete;
+
 		messenger(const config &config, const callbacks &callbacks) :
 			_callbacks(callbacks),
 			_config(config)
 		{
 			using namespace asio::ip;
-			asio::error_code ec;
 			udp::endpoint endpoint;
-			address adr = asio::ip::address::from_string(config.ip_adress, ec);
-			if (ec.value() != 0)
-			{
-				udp::resolver resolver(_io_service);
-				udp::resolver::query query(udp::v4(), config.ip_adress, "");
-				udp::resolver::iterator iter = resolver.resolve(query);
-				udp::endpoint ep = *iter;
-				endpoint = udp::endpoint(ep.address(), config.dht_port + 1);
-			}
-			else
-				endpoint = udp::endpoint(adr, config.dht_port + 1);
+			address adr = get_public_ip();
+			
+			endpoint = udp::endpoint(adr, config.dht_port + 1);
 
 			_network_service = std::make_unique<Network::network_service>(_io_service, endpoint, bind(&messenger::handle_packets, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
-			_dht = std::make_unique<GraceDHT::dht>(_config.ip_adress, _config.dht_port, _config.user.id);
+			_dht = std::make_unique<GraceDHT::dht>(adr.to_string(), _config.dht_port, _config.user.id);
 		}
 
 		bool dht_bootstrap(const std::string &str_id, const std::string &ip_adr, unsigned short port)
@@ -135,6 +129,26 @@ namespace GraceMessenger
 					_callbacks.friend_request_send_error(&request, &stat);
 				}
 			});
+		}
+
+		std::string id() const
+		{
+			return id_to_string(_config.user.id);
+		}
+
+		std::string ip() const
+		{
+			return _network_service->endpoint().address().to_string();
+		}
+
+		uint16_t port() const
+		{
+			return dht_port() + 1;
+		}
+
+		uint16_t dht_port() const
+		{
+			return _config.dht_port;
 		}
 		
 

@@ -3,11 +3,7 @@
 
 const std::string LogFileName = "log.log";
 
-#ifdef _DEBUG
 #define LOG(Level, Message) log::log_msg(Level, Message, __FUNCTION__)
-#else
-#define LOG(Level, Message) 
-#endif
 
 
 class log
