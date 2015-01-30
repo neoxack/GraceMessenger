@@ -148,6 +148,11 @@ namespace GraceMessenger
 		{
 			return _config.dht_port;
 		}
+
+		uint16_t dht_nodes_count() const
+		{
+			return _dht->get_nodes_count();
+		}
 		
 
 	private:

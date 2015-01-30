@@ -1,5 +1,6 @@
 #include <tchar.h>
 #include <conio.h>
+#include <iostream>
 
 #include "messenger.h"
 //#include "logger/log.h"
@@ -69,6 +70,10 @@ int _tmain(int argc, _TCHAR* argv[])
 		messenger1.send_message(m);
 		message m2(config1.user.id, L"Hello from Boris");
 		messenger2.send_message(m2);
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(25000));
+
+		std::cout << "DHT nodes count: " << messenger2.dht_nodes_count() << std::endl;
 
 		config_loader::save_config(config2, L"config2.json");
 		config from_file = config_loader::load_config(L"config2.json");

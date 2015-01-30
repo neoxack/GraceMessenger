@@ -163,7 +163,7 @@ namespace GraceMessenger
 				send_message(&send_nodes_pack.header, endpoint);
 			}
 
-			void handle_get_nodes_response(const send_nodes_packet *pack, const udp::endpoint &endpoint)
+			void handle_get_nodes_response(const send_nodes_packet *pack, const udp::endpoint &)
 			{
 				if (_state == Started)
 				{
