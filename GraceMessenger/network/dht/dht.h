@@ -158,11 +158,9 @@ namespace GraceMessenger
 				node_id find_id;
 				memcpy(find_id.data(), get_nodes_pack->requested_id, find_id.size());
 				auto closest_nodes = _routing_table->find_closest_nodes(find_id, MAX_NODES_IN_RESPONSE);
-				if (closest_nodes.size() > 0)
-				{
-					send_nodes_packet send_nodes_pack(_main_node.id.data(), closest_nodes);
-					send_message(&send_nodes_pack.header, endpoint);
-				}
+
+				send_nodes_packet send_nodes_pack(_main_node.id.data(), closest_nodes);
+				send_message(&send_nodes_pack.header, endpoint);
 			}
 
 			void handle_get_nodes_response(const send_nodes_packet *pack, const udp::endpoint &endpoint)
@@ -177,8 +175,13 @@ namespace GraceMessenger
 				{
 					for (size_t i = 0; i < pack->nodes_count; i++)
 					{
-						ping_packet ping_pack(_main_node.id.data());
-						send_message(&ping_pack.header, pack->nodes[i].endpoint);
+						node_id id;
+						memcpy(id.data(), pack->header.sender, USER_ID_LENGTH);
+						if (id != _main_node.id)
+						{
+							ping_packet ping_pack(_main_node.id.data());
+							send_message(&ping_pack.header, pack->nodes[i].endpoint);
+						}
 					}			
 				}
 			}
