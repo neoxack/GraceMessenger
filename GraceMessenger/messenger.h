@@ -30,18 +30,15 @@ namespace GraceMessenger
 			_callbacks(callbacks),
 			_config(config)
 		{
-			using namespace asio::ip;
-			udp::endpoint endpoint;
-			address adr = get_public_ip();
-			
-			endpoint = udp::endpoint(adr, config.dht_port + 1);
-
-			_network_service = std::make_unique<Network::network_service>(_io_service, endpoint, bind(&messenger::handle_packets, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+			asio::ip::address adr = get_public_ip();	
 			_dht = std::make_unique<GraceDHT::dht>(adr.to_string(), _config.dht_port, _config.user.id);
 		}
 
 		bool dht_bootstrap(const std::string &str_id, const std::string &ip_adr, unsigned short port)
 		{
+			asio::ip::udp::endpoint endpoint(_dht->endpoint().address(), _config.dht_port + 1);;
+			_network_service = std::make_unique<Network::network_service>(_io_service, endpoint, bind(&messenger::handle_packets, this, std::placeholders::_1, std::placeholders::_2, std::placeholders::_3));
+
 			return _dht->bootstrap(str_id, ip_adr, port, _callbacks.dht_bootstrapped);
 		}
 
@@ -138,7 +135,7 @@ namespace GraceMessenger
 
 		std::string ip() const
 		{
-			return _network_service->endpoint().address().to_string();
+			return _dht->endpoint().address().to_string();
 		}
 
 		uint16_t port() const

@@ -26,8 +26,6 @@ namespace GraceDHT
 			start();
 		}
 
-		
-
 		~network_service()
 		{
 			stop();

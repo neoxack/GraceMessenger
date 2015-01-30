@@ -55,11 +55,6 @@ namespace GraceMessenger
 				stop();
 			}
 
-			asio::ip::udp::endpoint endpoint()
-			{
-				return _my_endpoint;
-			}
-
 		private:
 			void start()
 			{

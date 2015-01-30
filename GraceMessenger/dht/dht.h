@@ -112,6 +112,10 @@ namespace GraceDHT
 			return _routing_table->get_nodes_count();
 		}
 
+		udp::endpoint endpoint() const
+		{
+			return _main_node.endpoint;
+		}
 
 		~dht()
 		{
