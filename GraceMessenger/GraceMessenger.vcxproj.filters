@@ -36,42 +36,6 @@
     <ClInclude Include="contact_list.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dht\constants.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dht\dht.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dht\network_service.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dht\node.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dht\node_entry.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dht\node_id.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dht\routing_table.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dht\utils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dht\messages\error.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dht\messages\find_node.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dht\messages\message_header.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="dht\messages\ping.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="crypto\crypto.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -118,6 +82,30 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="json11.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="network\dht\messages\packets.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="network\dht\constants.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="network\dht\dht.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="network\dht\network_service.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="network\dht\node.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="network\dht\node_id.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="network\dht\routing_table.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="network\dht\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

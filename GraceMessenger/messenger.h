@@ -5,14 +5,15 @@
 #include "status.h"
 #include "message.h"
 #include "callbacks.h"
-#include "dht/dht.h"
 #include "network/network_service.h"
 #include "config.h"
 #include "contact.h"
 #include "friend_request.h"
+#include "network/dht/dht.h"
 
 namespace GraceMessenger
 {
+
 	enum network_status
 	{
 		Offline = 0,
@@ -31,7 +32,7 @@ namespace GraceMessenger
 			_config(config)
 		{
 			asio::ip::address adr = get_public_ip();	
-			_dht = std::make_unique<GraceDHT::dht>(adr.to_string(), _config.dht_port, _config.user.id);
+			_dht = std::make_unique<DHT::dht>(adr.to_string(), _config.dht_port, _config.user.id);
 		}
 
 		bool dht_bootstrap(const std::string &str_id, const std::string &ip_adr, unsigned short port)
@@ -76,11 +77,11 @@ namespace GraceMessenger
 			crypted_pack.crypt(simple_text_message_pack, shared_k);
 
 			_dht->find_node(m.contact,
-				[this, crypted_pack, m](const GraceDHT::node_id *id, bool success, const GraceDHT::node* result, int error)
+				[this, crypted_pack, m](const DHT::node_id *id, bool success, const asio::ip::udp::endpoint* result, int error)
 			{
 				if (success)
 				{
-					asio::ip::udp::endpoint endpoint(result->endpoint.address(), result->endpoint.port()+1);
+					asio::ip::udp::endpoint endpoint(result->address(), result->port() + 1);
 					_network_service->send(crypted_pack, endpoint);
 					_callbacks.message_sent(&m);
 				}				
@@ -109,11 +110,11 @@ namespace GraceMessenger
 			crypted_pack.crypt(friend_request_pack, shared_k);
 
 			_dht->find_node(request.contact,
-				[this, crypted_pack, request](const GraceDHT::node_id *id, bool success, const GraceDHT::node* result, int error)
+				[this, crypted_pack, request](const DHT::node_id *id, bool success, const asio::ip::udp::endpoint* result, int error)
 			{
 				if (success)
 				{
-					asio::ip::udp::endpoint endpoint(result->endpoint.address(), result->endpoint.port() + 1);
+					asio::ip::udp::endpoint endpoint(result->address(), result->port() + 1);
 					_network_service->send(crypted_pack, endpoint);
 					_callbacks.friend_request_sended(&request);
 				}
@@ -163,10 +164,10 @@ namespace GraceMessenger
 			crypted_pack.crypt(add_friend_pack, shared_k);
 
 			_dht->find_node(user_id,
-				[this, crypted_pack](const GraceDHT::node_id *id, bool success, const GraceDHT::node* result, int error)
+				[this, crypted_pack](const DHT::node_id *id, bool success, const asio::ip::udp::endpoint* result, int error)
 			{
 				if (success)
-					_network_service->send(crypted_pack, result->endpoint);
+					_network_service->send(crypted_pack, *result);
 				else
 					LOG(Error, "dht not found node");
 			});
@@ -184,10 +185,10 @@ namespace GraceMessenger
 			crypted_pack.crypt(delete_friend_pack, shared_k);
 
 			_dht->find_node(user_id,
-				[this, crypted_pack](const GraceDHT::node_id *id, bool success, const GraceDHT::node* result, int error)
+				[this, crypted_pack](const DHT::node_id *id, bool success, const asio::ip::udp::endpoint* result, int error)
 			{
 				if (success)
-					_network_service->send(crypted_pack, result->endpoint);
+					_network_service->send(crypted_pack, *result);
 				else
 					LOG(Error, "dht not found node");
 			});
@@ -274,10 +275,10 @@ namespace GraceMessenger
 			crypted_pack.crypt(ping_pack, shared_k);
 
 			_dht->find_node(user_id,
-				[this, crypted_pack](const GraceDHT::node_id *id, bool success, const GraceDHT::node* result, int error)
+				[this, crypted_pack](const DHT::node_id *id, bool success, const asio::ip::udp::endpoint* result, int error)
 			{
 				if (success)
-					_network_service->send(crypted_pack, result->endpoint);
+					_network_service->send(crypted_pack, *result);
 				else
 					LOG(Error, "dht not found node");
 			});
@@ -295,17 +296,17 @@ namespace GraceMessenger
 			crypted_pack.crypt(pong_pack, shared_k);
 
 			_dht->find_node(user_id,
-				[this, crypted_pack](const GraceDHT::node_id *id, bool success, const GraceDHT::node* result, int error)
+				[this, crypted_pack](const DHT::node_id *id, bool success, const asio::ip::udp::endpoint* result, int error)
 			{
 				if (success)
-					_network_service->send(crypted_pack, result->endpoint);
+					_network_service->send(crypted_pack, *result);
 				else
 					LOG(Error, "dht not found node");
 			});
 		}
 
 		asio::io_service _io_service;
-		std::unique_ptr<GraceDHT::dht> _dht;
+		std::unique_ptr<DHT::dht> _dht;
 		std::unique_ptr<Network::network_service> _network_service;
 		std::list<contact> _contact_list;
 		//std::unordered_map<uint32_t, message> _messages;
