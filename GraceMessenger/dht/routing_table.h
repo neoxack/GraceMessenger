@@ -1,6 +1,5 @@
 #pragma once
 #include <array>
-#include <mutex>
 
 #include "node.h"
 #include "../cpplinq.hpp"
@@ -15,6 +14,9 @@ namespace GraceDHT
 	class routing_table
 	{
 	public:
+
+		routing_table(const routing_table&) = delete;
+		routing_table& operator=(const routing_table&) = delete;
 
 		routing_table(const node &main_node, network_service &network_service) :_main_node(main_node), _network_service(network_service)
 		{
