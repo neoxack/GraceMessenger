@@ -52,25 +52,29 @@ int _tmain(int argc, _TCHAR* argv[])
 		callbacks.message_send_error = message_send_error;
 		callbacks.message_delivered = message_delivered;
 
-		config dht_config;
+		/*config dht_config;
 		dht_config.dht_port = 6000;
 		dht_config.user = user(L"DHT");
 		messenger dht(dht_config, callbacks);
 		std::cout << "DHT started. port: " << dht.dht_port() << std::endl;
-		std::cout << "ID: " << dht.id() << std::endl;
+		std::cout << "ID: " << dht.id() << std::endl;*/
 	
+		auto id = "0F3003DECBFBAB835ECBCC7D9175795ED3E2A09A07E0A56B2E446F7D1D465643";
+		unsigned short port = 6000;
+		auto ip = "54.191.219.95";
+
 		config config1;
 		config1.dht_port = 5555;
 		config1.user = user(L"Semyon");
 		messenger messenger1(config1, callbacks);
-		messenger1.dht_bootstrap(dht.id(), "localhost", dht.dht_port());
+		messenger1.dht_bootstrap(id, ip, port);
 		messenger1.online();
 		
 		config config2;
 		config2.dht_port = 5566;
 		config2.user = user(L"Boris");
 		messenger messenger2(config2, callbacks);
-		messenger2.dht_bootstrap(dht.id(), "localhost", dht.dht_port());
+		messenger2.dht_bootstrap(id, ip, port);
 		messenger2.online();
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(2000));

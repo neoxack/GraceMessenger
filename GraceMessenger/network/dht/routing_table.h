@@ -30,22 +30,33 @@ namespace GraceMessenger
 					auto findIter = find_if(_nodes.begin(), _nodes.end(), [id](const node &n){return n.id == id; });
 					if (findIter == _nodes.end())
 					{
-						node entry;
-						entry.id = id;
-						entry.endpoint = endpoint;
-						entry.is_good = true;
-						entry.last_activity = current_time;
-
-						if (_nodes.size() < K)
+						findIter = find_if(_nodes.begin(), _nodes.end(), [endpoint](const node &n){return n.endpoint == endpoint; });
+						if (findIter != _nodes.end())
 						{
-							_nodes.push_back(entry);
+							findIter->last_activity = current_time;
+							findIter->is_good = true;
+							findIter->id = id;
+							_nodes.splice(_nodes.end(), _nodes, findIter);
 						}
 						else
 						{
-							auto n = _nodes.begin();
-							ping(*n);
-							_nodes.pop_front();
-							_nodes.push_front(entry);
+							node entry;
+							entry.id = id;
+							entry.endpoint = endpoint;
+							entry.is_good = true;
+							entry.last_activity = current_time;
+
+							if (_nodes.size() < K)
+							{
+								_nodes.push_back(entry);
+							}
+							else
+							{
+								auto n = _nodes.begin();
+								ping(*n);
+								_nodes.pop_front();
+								_nodes.push_front(entry);
+							}
 						}
 					}
 					else

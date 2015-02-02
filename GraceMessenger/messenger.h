@@ -29,9 +29,9 @@ namespace GraceMessenger
 		messenger& operator=(const messenger&) = delete;
 
 		messenger(const config &config, const callbacks &callbacks) :
+			_network_status(Offline),
 			_callbacks(callbacks),
-			_config(config),
-			_network_status(Offline)
+			_config(config)
 		{
 			Network::forward_port(_config.dht_port, _config.dht_port);
 			Network::forward_port(_config.dht_port + 1, _config.dht_port + 1);
