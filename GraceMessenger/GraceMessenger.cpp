@@ -25,6 +25,13 @@ void message_received(const GraceMessenger::message *mes)
 	std::wcout << mes->content << std::endl;
 }
 
+void message_delivered(const GraceMessenger::message *mes)
+{
+	std::cout << "message delivered: ";
+	std::wcout << mes->content << std::endl;
+}
+
+
 void message_send_error(const GraceMessenger::message *mes, const GraceMessenger::status* status)
 {
 	std::cout << "message send error: ";
@@ -43,6 +50,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		callbacks.message_sent = message_sent;
 		callbacks.message_received = message_received;
 		callbacks.message_send_error = message_send_error;
+		callbacks.message_delivered = message_delivered;
 
 		config dht_config;
 		dht_config.dht_port = 6000;
@@ -56,13 +64,14 @@ int _tmain(int argc, _TCHAR* argv[])
 		config1.user = user(L"Semyon");
 		messenger messenger1(config1, callbacks);
 		messenger1.dht_bootstrap(dht.id(), "localhost", dht.dht_port());
-
+		messenger1.online();
 		
 		config config2;
 		config2.dht_port = 5566;
 		config2.user = user(L"Boris");
 		messenger messenger2(config2, callbacks);
 		messenger2.dht_bootstrap(dht.id(), "localhost", dht.dht_port());
+		messenger2.online();
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 		
@@ -70,8 +79,6 @@ int _tmain(int argc, _TCHAR* argv[])
 		messenger1.send_message(m);
 		message m2(config1.user.id, L"Hello from Boris");
 		messenger2.send_message(m2);
-
-		std::this_thread::sleep_for(std::chrono::milliseconds(25000));
 
 		std::cout << "DHT nodes count: " << messenger2.dht_nodes_count() << std::endl;
 

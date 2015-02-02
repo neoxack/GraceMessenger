@@ -156,3 +156,7 @@ $RECYCLE.BIN/
 .DS_Store
 *.json
 GraceMessenger/config2.json
+GraceMessenger/crypto/aes256.c.PVS-Studio.cfg
+GraceMessenger/crypto/sha1.cpp.PVS-Studio.cfg
+GraceMessenger/libs/libnatpmp/getgateway.c.PVS-Studio.cfg
+GraceMessenger/libs/libnatpmp/wingettimeofday.c.PVS-Studio.cfg

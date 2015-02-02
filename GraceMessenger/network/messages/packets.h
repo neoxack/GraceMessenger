@@ -24,6 +24,7 @@ namespace GraceMessenger
 		{
 			uint16_t size;
 			uint16_t type;
+			uint32_t id;
 		} data_packet_header;
 
 		enum data_packet_types
@@ -33,8 +34,9 @@ namespace GraceMessenger
 			AddFriend = 3,
 			DeleteFriend = 4,
 			SimpleTextMessage = 5,
-			Ping = 6,
-			Pong = 7
+			MessageDelivered = 6,
+			Ping = 7,
+			Pong = 8
 		};
 
 		#pragma pack(1)
@@ -134,16 +136,15 @@ namespace GraceMessenger
 		public:
 			data_packet_header header;
 			uint16_t text_length;
-			uint32_t req_num;
 			wchar_t text[16000];
 			
-			friend_request_packet(uint32_t req_n, const std::wstring &msg_text)
+			friend_request_packet(uint32_t id, const std::wstring &msg_text)
 			{
 				header.type = FriendRequest;		
 				text_length = msg_text.size();
-				req_num = req_n;
+				header.id = id;
 				size_t data_packet_header_size = sizeof(data_packet_header);
-				header.size = data_packet_header_size + sizeof(req_num) + sizeof(text_length) + text_length * sizeof(wchar_t);
+				header.size = data_packet_header_size + sizeof(text_length) + text_length * sizeof(wchar_t);
 				memcpy(text, msg_text.c_str(), text_length * sizeof(wchar_t));
 			}
 
@@ -154,14 +155,13 @@ namespace GraceMessenger
 		{
 		public:
 			data_packet_header header;
-			uint32_t req_num;
 
-			add_friend_packet(size_t req_n)
+			add_friend_packet(uint32_t id)
 			{
 				header.type = AddFriend;
-				req_num = req_n;
+				header.id = id;
 				size_t data_packet_header_size = sizeof(data_packet_header);
-				header.size = data_packet_header_size + sizeof(req_num);
+				header.size = data_packet_header_size;
 			}
 
 		};
@@ -171,14 +171,13 @@ namespace GraceMessenger
 		{
 		public:
 			data_packet_header header;
-			uint32_t req_num;
 
-			delete_friend_packet(size_t req_n)
+			delete_friend_packet(uint32_t id)
 			{
 				header.type = DeleteFriend;
-				req_num = req_n;
+				header.id = id;
 				size_t data_packet_header_size = sizeof(data_packet_header);
-				header.size = data_packet_header_size + sizeof(req_num);
+				header.size = data_packet_header_size;
 			}
 
 		};
@@ -189,21 +188,39 @@ namespace GraceMessenger
 		{
 		public:
 			data_packet_header header;
-			uint32_t id;
 			uint16_t text_length;
 			wchar_t text[16000];
 
-			simple_text_message_packet(uint32_t msg_id, const std::wstring &msg_text)
+			simple_text_message_packet(uint32_t id, const std::wstring &msg_text)
 			{
 				header.type = SimpleTextMessage;
-				id = msg_id;
+				header.id = id;
 				size_t data_packet_header_size = sizeof(data_packet_header);
 				text_length = msg_text.size();
-				header.size = data_packet_header_size + sizeof(text_length) + sizeof(id) + text_length * sizeof(wchar_t);
+				header.size = data_packet_header_size + sizeof(text_length) + text_length * sizeof(wchar_t);
 				memcpy(text, msg_text.c_str(), text_length * sizeof(wchar_t));
 			}
 
 		};
+
+
+        #pragma pack(1)
+		class message_delivered_packet
+		{
+		public:
+			data_packet_header header;
+			uint16_t msg_type;
+
+			message_delivered_packet(uint32_t id, uint16_t msg_t)
+			{
+				header.type = MessageDelivered;
+				header.id = id;
+				msg_type = msg_t;
+				header.size = sizeof(data_packet_header) + sizeof(msg_type);
+			}
+
+		};
+
 
 		#pragma pack(1)
 		class ping_packet
