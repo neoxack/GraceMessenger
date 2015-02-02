@@ -10,6 +10,7 @@
 #include "contact.h"
 #include "friend_request.h"
 #include "network/dht/dht.h"
+#include "network/nat_pmp.h"
 
 namespace GraceMessenger
 {
@@ -30,9 +31,10 @@ namespace GraceMessenger
 		messenger(const config &config, const callbacks &callbacks) :
 			_callbacks(callbacks),
 			_config(config)
-		{
-			asio::ip::address adr = get_public_ip();	
-			_dht = std::make_unique<DHT::dht>(adr.to_string(), _config.dht_port, _config.user.id);
+		{	
+			_nat_pmp.forward_port(_config.dht_port, _config.dht_port);
+			_nat_pmp.forward_port(_config.dht_port+1, _config.dht_port+1);
+			_dht = std::make_unique<DHT::dht>(_config.dht_port, _config.user.id);
 		}
 
 		bool dht_bootstrap(const std::string &str_id, const std::string &ip_adr, unsigned short port)
@@ -132,11 +134,6 @@ namespace GraceMessenger
 		std::string id() const
 		{
 			return id_to_string(_config.user.id);
-		}
-
-		std::string ip() const
-		{
-			return _dht->endpoint().address().to_string();
 		}
 
 		uint16_t port() const
@@ -310,6 +307,7 @@ namespace GraceMessenger
 			});
 		}
 
+		Network::nat_pmp _nat_pmp;
 		asio::io_service _io_service;
 		std::unique_ptr<DHT::dht> _dht;
 		std::unique_ptr<Network::network_service> _network_service;

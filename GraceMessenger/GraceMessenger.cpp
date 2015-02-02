@@ -48,21 +48,21 @@ int _tmain(int argc, _TCHAR* argv[])
 		dht_config.dht_port = 6000;
 		dht_config.user = user(L"DHT");
 		messenger dht(dht_config, callbacks);
-		std::cout << "DHT started. ip: " << dht.ip() << " port: " << dht.dht_port() << std::endl;
+		std::cout << "DHT started. port: " << dht.dht_port() << std::endl;
 		std::cout << "ID: " << dht.id() << std::endl;
 	
 		config config1;
 		config1.dht_port = 5555;
 		config1.user = user(L"Semyon");
 		messenger messenger1(config1, callbacks);
-		messenger1.dht_bootstrap(dht.id(), dht.ip(), dht.dht_port());
+		messenger1.dht_bootstrap(dht.id(), "localhost", dht.dht_port());
 
 		
 		config config2;
 		config2.dht_port = 5566;
 		config2.user = user(L"Boris");
 		messenger messenger2(config2, callbacks);
-		messenger2.dht_bootstrap(dht.id(), dht.ip(), dht.dht_port());
+		messenger2.dht_bootstrap(dht.id(), "localhost", dht.dht_port());
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 		

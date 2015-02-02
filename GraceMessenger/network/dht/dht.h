@@ -35,12 +35,11 @@ namespace GraceMessenger
 			dht(const dht&) = delete;
 			dht& operator=(const dht&) = delete;
 
-			dht(const std::string &ip_adr, unsigned short port, const node_id &id)
+			dht(unsigned short port, const node_id &id)
 			{
 				_state = Off;
 				udp::endpoint endpoint;
-				address adr = address::from_string(ip_adr);
-				endpoint = udp::endpoint(adr, port);
+				endpoint = udp::endpoint(udp::v4(), port);
 
 				_main_node.endpoint = endpoint;
 				_main_node.id = id;
@@ -77,7 +76,6 @@ namespace GraceMessenger
 				{
 					timer_start(FIND_PERIOD);
 					_bootstrap_callback = callback;
-					_routing_table->update(id, endpoint);
 					get_nodes_packet get_nodes_pack(_main_node.id.data(), _main_node.id.data());
 					send_message(&get_nodes_pack.header, endpoint);
 					return true;

@@ -58,6 +58,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <Profile>true</Profile>
+      <AdditionalDependencies>Iphlpapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -79,6 +80,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>Iphlpapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -89,6 +91,10 @@
     <ClInclude Include="crypto\aes256.h" />
     <ClInclude Include="crypto\crypto.h" />
     <ClInclude Include="crypto\sha1.h" />
+    <ClInclude Include="libs\libnatpmp\getgateway.h" />
+    <ClInclude Include="libs\libnatpmp\natpmp.h" />
+    <ClInclude Include="libs\libnatpmp\wingettimeofday.h" />
+    <ClInclude Include="network\nat_pmp.h" />
     <ClInclude Include="network\dht\constants.h" />
     <ClInclude Include="network\dht\dht.h" />
     <ClInclude Include="network\dht\messages\packets.h" />
@@ -120,7 +126,11 @@
     <ClCompile Include="crypto\sha1.cpp" />
     <ClCompile Include="GraceMessenger.cpp" />
     <ClCompile Include="json11.cpp" />
+    <ClCompile Include="libs\libnatpmp\getgateway.c" />
+    <ClCompile Include="libs\libnatpmp\natpmp.c" />
+    <ClCompile Include="libs\libnatpmp\wingettimeofday.c" />
     <ClCompile Include="logger\Logger.cpp" />
+    <ClCompile Include="network\nat_pmp.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

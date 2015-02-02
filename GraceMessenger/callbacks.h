@@ -1,12 +1,11 @@
 #pragma once
 
-#include <string>
 #include <functional>
 #include "message.h"
+#include "friend_request.h"
 
 namespace GraceMessenger
 {
-	struct friend_request;
 
 	typedef struct
 	{

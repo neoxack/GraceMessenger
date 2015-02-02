@@ -1,6 +1,5 @@
 #pragma once
 
-#include <string>
 #include <stdint.h>
 
 #include "user.h"
@@ -9,11 +8,12 @@
 
 namespace GraceMessenger
 {
-	struct friend_request
+	class friend_request
 	{
 	public:
-		friend_request(const user_id &user, const std::wstring &text) :
+		friend_request(const user_id &user, const std::wstring &text, const std::wstring &sender_name) :
 			contact(user),
+			name(sender_name),
 			content(text),
 			input(false)
 		{
@@ -31,6 +31,7 @@ namespace GraceMessenger
 		uint32_t id;
 		time_t timestamp;
 		user_id contact;
+		std::wstring name;
 		std::wstring content;
 		bool input;
 	};
