@@ -31,9 +31,9 @@ namespace GraceMessenger
 		messenger(const config &config, const callbacks &callbacks) :
 			_callbacks(callbacks),
 			_config(config)
-		{	
-			_nat_pmp.forward_port(_config.dht_port, _config.dht_port);
-			_nat_pmp.forward_port(_config.dht_port+1, _config.dht_port+1);
+		{
+			Network::forward_port(_config.dht_port, _config.dht_port);
+			Network::forward_port(_config.dht_port + 1, _config.dht_port + 1);
 			_dht = std::make_unique<DHT::dht>(_config.dht_port, _config.user.id);
 		}
 
@@ -307,7 +307,6 @@ namespace GraceMessenger
 			});
 		}
 
-		Network::nat_pmp _nat_pmp;
 		asio::io_service _io_service;
 		std::unique_ptr<DHT::dht> _dht;
 		std::unique_ptr<Network::network_service> _network_service;

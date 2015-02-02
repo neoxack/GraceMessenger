@@ -130,7 +130,6 @@
     <ClCompile Include="libs\libnatpmp\natpmp.c" />
     <ClCompile Include="libs\libnatpmp\wingettimeofday.c" />
     <ClCompile Include="logger\Logger.cpp" />
-    <ClCompile Include="network\nat_pmp.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

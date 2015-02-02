@@ -140,9 +140,6 @@
     <ClCompile Include="json11.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="network\nat_pmp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="libs\libnatpmp\getgateway.c">
       <Filter>Source Files</Filter>
     </ClCompile>
