@@ -10,56 +10,14 @@ namespace GraceMessenger
 {
 	namespace DHT
 	{
-		inline int32_t log2(int32_t i)
-		{
-			if (i == 0)
-				return -1;
+		
+		inline uint64_t id_distance(const std::array<uint8_t, USER_ID_LENGTH> &arr1, const std::array<uint8_t, USER_ID_LENGTH> &arr2)
+		{	
+			uint64_t *a = (uint64_t *)arr1.data();
+			uint64_t *b = (uint64_t *)arr2.data();
 
-			int bit = 31;
-			if ((i & 0xFFFFFF00) == 0)
-			{
-				i <<= 24;
-				bit = 7;
-			}
-			else if ((i & 0xFFFF0000) == 0)
-			{
-				i <<= 16;
-				bit = 15;
-			}
-			else if ((i & 0xFF000000) == 0)
-			{
-				i <<= 8;
-				bit = 23;
-			}
-
-			if ((i & 0xF0000000) == 0)
-			{
-				i <<= 4;
-				bit -= 4;
-			}
-
-			while ((i & 0x80000000) == 0)
-			{
-				i <<= 1;
-				bit--;
-			}
-
-			return bit;
-		}
-
-		template <size_t SIZE>
-		inline int32_t bit_position(const std::array<uint8_t, SIZE> &arr1, const std::array<uint8_t, SIZE> &arr2)
-		{
-			for (size_t i = 0; i < SIZE; i++)
-			{
-				int32_t xor = arr1[i] ^ arr2[i];
-				if (xor != 0)
-				{
-					return (SIZE - i - 1) * 8 + (log2(xor));
-				}
-				if (i == (SIZE - 1)) return -1;
-			}
-			return 0;
+			uint64_t x = (*a) ^ (*b);	
+			return x;
 		}
 
 		inline uint32_t get_random()

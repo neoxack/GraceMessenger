@@ -18,14 +18,20 @@ namespace GraceMessenger
 		static void save_config(const config &config, const std::wstring &path)
 		{
 			using namespace json11;
-			Json obj = Json::object({
+			Json obj = Json::object
+			{
 				{ "dht_port", config.dht_port },
-				{ "user", Json::object({
-					{ "id", id_to_string(config.user.id) },
-					{ "name", ws2s(config.user.name) },
-					{ "private_key", id_to_string(config.user.private_key) }
-				}) },
-			});
+				{ "user", Json::object
+					{
+						{ "id", id_to_string(config.user.id) },
+						{ "name", ws2s(config.user.name) },
+						{ "private_key", id_to_string(config.user.private_key) }
+					}
+				},
+				{ "bootstrap_nodes", config.bootstrap_nodes }
+			};
+			
+				
 			std::string dump = obj.dump();
 			std::ofstream out(path);
 			out << dump;
@@ -45,6 +51,16 @@ namespace GraceMessenger
 			conf.user.id = id_from_string(json["user"]["id"].string_value());
 			conf.user.private_key = id_from_string(json["user"]["private_key"].string_value());
 			conf.user.name = s2ws(json["user"]["name"].string_value());
+			auto bootstrap_nodes = json["bootstrap_nodes"].array_items();
+			for (auto &n : bootstrap_nodes)
+			{
+				config_bootstrap_node b_node;
+				b_node.address = n["address"].string_value();
+				b_node.id = n["id"].string_value();
+				b_node.port = n["port"].number_value();
+				conf.bootstrap_nodes.push_back(b_node);
+			}
+
 			return conf;
 		}
 

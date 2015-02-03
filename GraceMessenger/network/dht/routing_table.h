@@ -91,7 +91,7 @@ namespace GraceMessenger
 					}
 
 					auto dst = from(tmpList)
-						>> orderby_ascending([id](const node*a){return bit_position(id, a->id); })
+						>> orderby_ascending([id](const node*a){return id_distance(id, a->id); })
 						>> take(max_results)
 						>> to_vector();
 

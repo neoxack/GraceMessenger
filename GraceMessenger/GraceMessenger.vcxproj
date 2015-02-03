@@ -85,7 +85,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="callbacks.h" />
-    <ClInclude Include="config_loader.h" />
+    <ClInclude Include="config\config_loader.h" />
     <ClInclude Include="contact_list.h" />
     <ClInclude Include="cpplinq.hpp" />
     <ClInclude Include="crypto\aes256.h" />
@@ -109,7 +109,7 @@
     <ClInclude Include="logger\Logger.h" />
     <ClInclude Include="message.h" />
     <ClInclude Include="messenger.h" />
-    <ClInclude Include="config.h" />
+    <ClInclude Include="config\config.h" />
     <ClInclude Include="network\constants.h" />
     <ClInclude Include="contact.h" />
     <ClInclude Include="network\messages\packets.h" />

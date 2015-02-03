@@ -6,11 +6,11 @@
 #include "message.h"
 #include "callbacks.h"
 #include "network/network_service.h"
-#include "config.h"
 #include "contact.h"
 #include "friend_request.h"
 #include "network/dht/dht.h"
 #include "network/nat_pmp.h"
+#include "config/config.h"
 
 namespace GraceMessenger
 {
@@ -38,9 +38,12 @@ namespace GraceMessenger
 			_dht = std::make_unique<DHT::dht>(_config.dht_port, _config.user.id);
 		}
 
-		bool dht_bootstrap(const std::string &str_id, const std::string &ip_adr, unsigned short port)
+		void dht_bootstrap()
 		{
-			return _dht->bootstrap(str_id, ip_adr, port, _callbacks.dht_bootstrapped);
+			for (auto &bootstrap_node : _config.bootstrap_nodes)
+			{
+				_dht->bootstrap(bootstrap_node.address, bootstrap_node.address, bootstrap_node.port, _callbacks.dht_bootstrapped);
+			}
 		}
 
 		status online()

@@ -3,8 +3,11 @@
 #include <iostream>
 
 #include "messenger.h"
+#include "config/config.h"
+#include "config/config_loader.h"
+
 //#include "logger/log.h"
-#include "config_loader.h"
+
 
 
 void dht_bootstrapped(bool success, int error)
@@ -52,29 +55,23 @@ int _tmain(int argc, _TCHAR* argv[])
 		callbacks.message_send_error = message_send_error;
 		callbacks.message_delivered = message_delivered;
 
-		/*config dht_config;
-		dht_config.dht_port = 6000;
-		dht_config.user = user(L"DHT");
+		config dht_config = config_loader::load_config(L"dht_conf.json");
 		messenger dht(dht_config, callbacks);
 		std::cout << "DHT started. port: " << dht.dht_port() << std::endl;
-		std::cout << "ID: " << dht.id() << std::endl;*/
+		std::cout << "ID: " << dht.id() << std::endl;
 	
-		auto id = "0F3003DECBFBAB835ECBCC7D9175795ED3E2A09A07E0A56B2E446F7D1D465643";
+		/*auto id = "0F3003DECBFBAB835ECBCC7D9175795ED3E2A09A07E0A56B2E446F7D1D465643";
 		unsigned short port = 6000;
-		auto ip = "54.191.219.95";
+		auto ip = "54.191.219.95";*/
 
-		config config1;
-		config1.dht_port = 5555;
-		config1.user = user(L"Semyon");
+		config config1 = config_loader::load_config(L"config1.json");
 		messenger messenger1(config1, callbacks);
-		messenger1.dht_bootstrap(id, ip, port);
+		messenger1.dht_bootstrap();
 		messenger1.online();
 		
-		config config2;
-		config2.dht_port = 5566;
-		config2.user = user(L"Boris");
+		config config2 = config_loader::load_config(L"config2.json");
 		messenger messenger2(config2, callbacks);
-		messenger2.dht_bootstrap(id, ip, port);
+		messenger2.dht_bootstrap();
 		messenger2.online();
 
 		std::this_thread::sleep_for(std::chrono::milliseconds(2000));
@@ -86,8 +83,9 @@ int _tmain(int argc, _TCHAR* argv[])
 
 		std::cout << "DHT nodes count: " << messenger2.dht_nodes_count() << std::endl;
 
-		config_loader::save_config(config2, L"config2.json");
-		config from_file = config_loader::load_config(L"config2.json");
+		//config_loader::save_config(config2, L"config2.json");
+
+		//config from_file = config_loader::load_config(L"config2.json");
 
 
 		_getch();
